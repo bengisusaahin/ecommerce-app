@@ -51,4 +51,11 @@ export class ProductsService {
         this.products[productIndex] = updatedProduct;
         return updatedProduct;
     }
+
+    remove(id: number): void {
+        const productIndex = this.products.findIndex((p) => p.id === id);
+        if (productIndex === -1) throw new NotFoundException(`Product with id ${id} not found`);
+
+        this.products.splice(productIndex, 1);
+    }
 }
