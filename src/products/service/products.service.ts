@@ -1,4 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { ProductType } from '../utils/types';
+import { dummyProducts } from 'src/data/DummyData';
 
 @Injectable()
-export class ProductsService {}
+export class ProductsService {
+    private products: ProductType[] = dummyProducts;
+
+    findAll(query: {
+        page?: number;
+        limit?: number;
+        sort?: keyof ProductType;
+        order?: 'asc' | 'desc';
+    }): ProductType[] {
+        const { page = 1, limit = 10, sort = 'id', order = 'asc' } = query;
+
+        const sorted = [...this.products].sort((a, b) => {
+            if (order === 'asc') return a[sort] > b[sort] ? 1 : -1;
+            else return a[sort] < b[sort] ? 1 : -1;
+        });
+
+        const start = (page - 1) * limit;
+        const end = start + limit;
+
+        return sorted.slice(start, end);
+    }
+}
