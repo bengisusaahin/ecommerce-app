@@ -51,4 +51,11 @@ export class UsersService {
         this.users[userIndex] = updatedUser;
         return updatedUser;
     }
+
+    remove(id: number): void {
+        const userIndex = this.users.findIndex((user) => user.id === id);
+        if (userIndex === -1) throw new NotFoundException(`User with id ${id} not found`);
+
+        this.users.splice(userIndex, 1);
+    }
 }
