@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductType } from '../utils/types';
 import { dummyProducts } from 'src/data/DummyData';
+import { CreateProductDto } from '../dto/create-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -29,5 +30,15 @@ export class ProductsService {
         const product = this.products.find((p) => p.id === id);
         if (!product) throw new NotFoundException(`Product with id ${id} not found`);
         return product;
+    }
+
+    create(dto: CreateProductDto): ProductType {
+        const newProduct: ProductType = {
+            id: Math.max(...this.products.map((p) => p.id)) + 1,
+            ...dto,
+        };
+
+        this.products.push(newProduct);
+        return newProduct;
     }
 }
