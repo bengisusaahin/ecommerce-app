@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ProductsService } from '../service/products.service';
 import { ProductType } from '../utils/types';
 
@@ -14,5 +14,10 @@ export class ProductsController {
         @Query('order') order?: 'asc' | 'desc',
     ): ProductType[] {
         return this.productsService.findAll({ page, limit, sort, order });
+    }
+
+    @Get(':id')
+    getProductById(@Param('id', ParseIntPipe) id: number): ProductType {
+        return this.productsService.findOne(id);
     }
 }

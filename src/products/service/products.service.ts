@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductType } from '../utils/types';
 import { dummyProducts } from 'src/data/DummyData';
 
@@ -23,5 +23,11 @@ export class ProductsService {
         const end = start + limit;
 
         return sorted.slice(start, end);
+    }
+
+    findOne(id: number): ProductType {
+        const product = this.products.find((p) => p.id === id);
+        if (!product) throw new NotFoundException(`Product with id ${id} not found`);
+        return product;
     }
 }
