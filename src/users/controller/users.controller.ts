@@ -3,6 +3,7 @@ import { UsersService } from '../service/users.service';
 import { UserType } from '../utils/types';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -24,14 +25,14 @@ export class UsersController {
     }
 
     @Post()
-    createUser(@Body() createUserDto: CreateUserDto): UserType {
+    createUser(@Body(CapitalizeNamePipe) createUserDto: CreateUserDto): UserType {
         return this.usersService.create(createUserDto);
     }
 
     @Put(':id')
     updateUser(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updateUserDto: UpdateUserDto,
+        @Body(CapitalizeNamePipe) updateUserDto: UpdateUserDto,
     ): UserType {
         return this.usersService.update(id, updateUserDto);
     }

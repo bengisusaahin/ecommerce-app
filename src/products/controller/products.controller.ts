@@ -3,6 +3,7 @@ import { ProductsService } from '../service/products.service';
 import { ProductType } from '../utils/types';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
 
 @Controller('products')
 export class ProductsController {
@@ -24,14 +25,14 @@ export class ProductsController {
     }
 
     @Post()
-    createProduct(@Body() createProductDto: CreateProductDto): ProductType {
+    createProduct(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto): ProductType {
         return this.productsService.create(createProductDto);
     }
 
     @Put(':id')
     updateProduct(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updateProductDto: UpdateProductDto,
+        @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
     ): ProductType {
         return this.productsService.update(id, updateProductDto);
     }
