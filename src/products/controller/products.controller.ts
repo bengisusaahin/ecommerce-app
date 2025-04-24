@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from '../service/products.service';
 import { ProductType } from '../utils/types';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -25,11 +26,13 @@ export class ProductsController {
     }
 
     @Post()
+    @UseGuards(AdminGuard)
     createProduct(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto): ProductType {
         return this.productsService.create(createProductDto);
     }
 
     @Put(':id')
+    @UseGuards(AdminGuard)
     updateProduct(
         @Param('id', ParseIntPipe) id: number,
         @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
@@ -38,6 +41,7 @@ export class ProductsController {
     }
 
     @Delete(':id')
+    @UseGuards(AdminGuard)
     deleteProduct(@Param('id', ParseIntPipe) id: number): void {
         return this.productsService.remove(id);
     }

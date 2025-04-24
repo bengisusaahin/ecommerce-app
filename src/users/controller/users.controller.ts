@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { UserType } from '../utils/types';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
+import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 
 @Controller('users')
 export class UsersController {
@@ -30,6 +31,7 @@ export class UsersController {
     }
 
     @Put(':id')
+    @UseGuards(SuperAdminGuard) 
     updateUser(
         @Param('id', ParseIntPipe) id: number,
         @Body(CapitalizeNamePipe) updateUserDto: UpdateUserDto,
@@ -38,6 +40,7 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @UseGuards(SuperAdminGuard) 
     deleteUser(@Param('id', ParseIntPipe) id: number): void {
         return this.usersService.remove(id);
     }
