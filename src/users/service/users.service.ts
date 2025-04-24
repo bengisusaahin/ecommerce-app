@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserType } from '../utils/types';
 import { dummyUsers } from 'src/data/DummyData';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -40,5 +41,14 @@ export class UsersService {
 
         this.users.push(newUser);
         return newUser;
+    }
+
+    update(id: number, dto: UpdateUserDto): UserType {
+        const userIndex = this.users.findIndex((user) => user.id === id);
+        if (userIndex === -1) throw new NotFoundException(`User with id ${id} not found`);
+
+        const updatedUser = { ...this.users[userIndex], ...dto };
+        this.users[userIndex] = updatedUser;
+        return updatedUser;
     }
 }
