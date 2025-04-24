@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserType } from '../utils/types';
 import { dummyUsers } from 'src/data/DummyData';
 
@@ -24,4 +24,10 @@ export class UsersService {
         const end = start + limit;
         return sorted.slice(start, end);
     }
+
+    findOne(id: number): UserType {
+        const user = this.users.find((user) => user.id === id);
+        if (!user) throw new NotFoundException(`User with id ${id} not found`);
+        return user;
+      }
 }

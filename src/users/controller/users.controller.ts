@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { UserType } from '../utils/types';
 
@@ -14,5 +14,10 @@ export class UsersController {
       @Query('order') order?: 'asc' | 'desc',
     ): UserType[] {
       return this.usersService.findAll({ page, limit, sort, order });
+    }
+
+    @Get(':id')
+    getUserById(@Param('id', ParseIntPipe) id: number): UserType {
+      return this.usersService.findOne(id);
     }
   }
