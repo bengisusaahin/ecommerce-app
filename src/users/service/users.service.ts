@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserType } from '../utils/types';
 import { dummyUsers } from 'src/data/DummyData';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -29,5 +30,15 @@ export class UsersService {
         const user = this.users.find((user) => user.id === id);
         if (!user) throw new NotFoundException(`User with id ${id} not found`);
         return user;
-      }
+    }
+
+    create(dto: CreateUserDto): UserType {
+        const newUser: UserType = {
+            id: Math.max(...this.users.map(user => user.id)) + 1,
+            ...dto,
+        };
+
+        this.users.push(newUser);
+        return newUser;
+    }
 }
