@@ -1,12 +1,9 @@
 import { Product } from "src/products/entity/product.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity()
-export class OrderItem {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class OrderItem extends BaseEntity{
   @Column()
   quantity: number;
 

@@ -4,17 +4,8 @@ import { OrderItem } from "./order-item.entity";
 
 @Entity()
 export class Order {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column('decimal')
   totalPrice: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @ManyToOne(() => User, user => user.orders)
   user: User;

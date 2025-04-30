@@ -1,13 +1,10 @@
 import { Order } from "src/order/entity/order.entity";
 import { Product } from "src/products/entity/product.entity";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
   
   @Entity()
-  export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
-  
+  export class User extends BaseEntity {  
     @Column()
     name: string;
   
@@ -25,12 +22,6 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
   
     @Column()
     role: string;
-  
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
   
     @OneToMany(() => Order, order => order.user)
     orders: Order[];
