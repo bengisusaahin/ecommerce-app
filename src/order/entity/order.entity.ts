@@ -1,0 +1,24 @@
+import { User } from "src/users/entity/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { OrderItem } from "./order-item.entity";
+
+@Entity()
+export class Order {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column('decimal')
+  totalPrice: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @ManyToOne(() => User, user => user.orders)
+  user: User;
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
+  orderItems: OrderItem[];
+}
