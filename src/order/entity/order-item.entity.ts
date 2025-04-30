@@ -1,21 +1,21 @@
 import { Product } from "src/products/entity/product.entity";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne } from "typeorm";
 import { Order } from "./order.entity";
 
 @Entity()
-export class OrderItem extends BaseEntity{
-  @Column()
-  quantity: number;
+export class OrderItem extends BaseEntity {
+    @Column({ type: 'int' })
+    quantity: number;
 
-  @Column('decimal')
-  price: number;
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    price: number;
 
-  @Column('decimal')
-  totalPrice: number;
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    totalPrice: number;
 
-  @ManyToOne(() => Product, product => product.orderItems)
-  product: Product;
+    @ManyToOne(() => Product, product => product.orderItems, { nullable: false, eager: true })
+    product: Product;
 
-  @ManyToOne(() => Order, order => order.orderItems)
-  order: Order;
+    @ManyToOne(() => Order, order => order.orderItems, { nullable: false })
+    order: Order;
 }

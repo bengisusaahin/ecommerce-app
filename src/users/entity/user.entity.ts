@@ -1,27 +1,28 @@
 import { Order } from "src/order/entity/order.entity";
 import { Product } from "src/products/entity/product.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany } from "typeorm";
+import { UserRole } from "../utils/types";
 
   
   @Entity()
   export class User extends BaseEntity {  
-    @Column()
+    @Column({ type: 'varchar', length: 100, unique: false })
     name: string;
   
-    @Column({ unique: true })
+    @Column({ type: 'varchar', length: 100, unique: true })
     email: string;
   
-    @Column()
+    @Column({ type: 'varchar', length: 100, unique: false })
     password: string;
   
-    @Column({ default: true })
+    @Column({ type: 'boolean', default: true })
     isActive: boolean;
   
     @Column({ type: 'date' })
     birthdate: Date;
   
-    @Column()
-    role: string;
+    @Column({ type: 'int', default: UserRole.USER })
+    role: UserRole;
   
     @OneToMany(() => Order, order => order.user)
     orders: Order[];

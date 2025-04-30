@@ -1,15 +1,17 @@
 import { User } from "src/users/entity/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { OrderItem } from "./order-item.entity";
 
 @Entity()
-export class Order {
-  @Column('decimal')
-  totalPrice: number;
+export class Order extends BaseEntity {
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    totalPrice: number;
 
-  @ManyToOne(() => User, user => user.orders)
-  user: User;
+    @ManyToOne(() => User, user => user.orders, { nullable: false, eager: true })
+    user: User;
 
-  @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
-  orderItems: OrderItem[];
+    @OneToMany(() => OrderItem, orderItem => orderItem.order, {
+        cascade: ['insert', 'update'],
+    })
+    orderItems: OrderItem[];
 }
