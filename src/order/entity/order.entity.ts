@@ -1,5 +1,6 @@
 import { User } from "src/users/entity/user.entity";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from 'src/common/entity/base.entity';
 import { OrderItem } from "./order-item.entity";
 
 @Entity()

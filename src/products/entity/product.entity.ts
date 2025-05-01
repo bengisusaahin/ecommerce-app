@@ -1,7 +1,8 @@
 import e from "express";
 import { OrderItem } from "src/order/entity/order-item.entity";
 import { User } from "src/users/entity/user.entity";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from 'src/common/entity/base.entity';
 
 @Entity()
 export class Product extends BaseEntity {

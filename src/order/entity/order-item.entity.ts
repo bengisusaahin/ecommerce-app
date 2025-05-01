@@ -1,5 +1,6 @@
 import { Product } from "src/products/entity/product.entity";
-import { BaseEntity, Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
+import { BaseEntity } from 'src/common/entity/base.entity';
 import { Order } from "./order.entity";
 
 @Entity()
