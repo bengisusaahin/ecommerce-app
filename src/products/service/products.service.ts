@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -43,12 +43,30 @@ export class ProductsService {
     }
 
     async create(dto: CreateProductDto): Promise<Product> {
+
+        if (dto.price <= 0) {
+            throw new BadRequestException('Price must be greater than 0');
+        }
+
+        if (dto.stock < 0) {
+            throw new BadRequestException('Stock cannot be negative');
+        }
+        
         const newProduct = this.productRepository.create(dto);
         return this.productRepository.save(newProduct);
     }
 
     async update(id: number, dto: UpdateProductDto): Promise<Product> {
         const product = await this.findOne(id);
+
+        if (dto.price && dto.price <= 0) {
+            throw new BadRequestException('Price must be greater than 0');
+        }
+
+        if (dto.stock && dto.stock < 0) {
+            throw new BadRequestException('Stock cannot be negative');
+        }
+        
         const updated = Object.assign(product, dto);
         return this.productRepository.save(updated);
     }

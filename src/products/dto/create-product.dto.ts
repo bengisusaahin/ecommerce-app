@@ -28,6 +28,7 @@ export class CreateProductDto {
 
     @IsNumber()
     @IsPositive()
+    @Min(0)
     price: number;
 
     @IsNumber()
