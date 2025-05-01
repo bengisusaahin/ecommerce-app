@@ -1,61 +1,63 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductType } from '../utils/types';
-import { dummyProducts } from 'src/data/DummyData';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from '../entity/product.entity';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
-    private products: ProductType[] = dummyProducts;
+    constructor(
+        @InjectRepository(Product)
+        private readonly productRepository: Repository<Product>,
+    ) { }
 
-    findAll(query: {
+    async findAll(query: {
         page?: number;
         limit?: number;
-        sort?: keyof ProductType;
+        sort?: keyof Product;
         order?: 'asc' | 'desc';
-    }): ProductType[] {
-        const { page = 1, limit = 10, sort = 'id', order = 'asc' } = query;
+        search?: string;
+    }): Promise<Product[]> {
+        const { page = 1, limit = 10, sort = 'id', order = 'asc', search } = query;
 
-        const sorted = [...this.products].sort((a, b) => {
-            if (order === 'asc') return a[sort] > b[sort] ? 1 : -1;
-            else return a[sort] < b[sort] ? 1 : -1;
+        const where = search
+            ? [
+                { name: ILike(`%${search}%`) },
+                { description: ILike(`%${search}%`) },
+            ]
+            : undefined;
+
+        return this.productRepository.find({
+            where,
+            order: { [sort]: order.toUpperCase() as 'ASC' | 'DESC' },
+            skip: (page - 1) * limit,
+            take: limit,
         });
-
-        const start = (page - 1) * limit;
-        const end = start + limit;
-
-        return sorted.slice(start, end);
     }
 
-    findOne(id: number): ProductType {
-        const product = this.products.find((p) => p.id === id);
+    async findOne(id: number): Promise<Product> {
+        const product = await this.productRepository.findOne({ where: { id } });
         if (!product) throw new NotFoundException(`Product with id ${id} not found`);
         return product;
     }
 
-    create(dto: CreateProductDto): ProductType {
-        const newProduct: ProductType = {
-            id: Math.max(...this.products.map((p) => p.id)) + 1,
-            ...dto,
-        };
-
-        this.products.push(newProduct);
-        return newProduct;
+    async create(dto: CreateProductDto): Promise<Product> {
+        const newProduct = this.productRepository.create(dto);
+        return this.productRepository.save(newProduct);
     }
 
-    update(id: number, dto: UpdateProductDto): ProductType {
-        const productIndex = this.products.findIndex((p) => p.id === id);
-        if (productIndex === -1) throw new NotFoundException(`Product with id ${id} not found`);
-
-        const updatedProduct = { ...this.products[productIndex], ...dto };
-        this.products[productIndex] = updatedProduct;
-        return updatedProduct;
+    async update(id: number, dto: UpdateProductDto): Promise<Product> {
+        const product = await this.findOne(id);
+        const updated = Object.assign(product, dto);
+        return this.productRepository.save(updated);
     }
 
-    remove(id: number): void {
-        const productIndex = this.products.findIndex((p) => p.id === id);
-        if (productIndex === -1) throw new NotFoundException(`Product with id ${id} not found`);
-
-        this.products.splice(productIndex, 1);
+    async remove(id: number): Promise<{ message: string }> {
+        const result = await this.productRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`Product with id ${id} not found`);
+        }
+        return { message: `Product with id ${id} successfully deleted` };
     }
 }
