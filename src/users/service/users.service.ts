@@ -1,61 +1,61 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserType } from '../utils/types';
-import { dummyUsers } from 'src/data/DummyData';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../entity/user.entity';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
 
-    private users: UserType[] = dummyUsers;
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) { }
 
-    findAll(query: {
+    async findAll(query: {
         page?: number;
         limit?: number;
-        sort?: keyof UserType;
+        sort?: keyof User;
         order?: 'asc' | 'desc';
-    }): UserType[] {
-        const { page = 1, limit = 10, sort = 'id', order = 'asc' } = query;
+        search?: string;
+    }): Promise<User[]> {
+        const { page = 1, limit = 10, sort = 'id', order = 'asc', search } = query;
 
-        const sorted = [...this.users].sort((a, b) => {
-            if (order === 'asc') return a[sort] > b[sort] ? 1 : -1;
-            else return a[sort] < b[sort] ? 1 : -1;
+        const where = search
+            ? [{ name: ILike(`%${search}%`) }, { email: ILike(`%${search}%`) }]
+            : undefined;
+
+        return this.userRepository.find({
+            where,
+            order: { [sort]: order.toUpperCase() as 'ASC' | 'DESC' },
+            skip: (page - 1) * limit,
+            take: limit,
         });
-
-        const start = (page - 1) * limit;
-        const end = start + limit;
-        return sorted.slice(start, end);
     }
 
-    findOne(id: number): UserType {
-        const user = this.users.find((user) => user.id === id);
+    async findOne(id: number): Promise<User> {
+        const user = await this.userRepository.findOne({ where: { id } });
         if (!user) throw new NotFoundException(`User with id ${id} not found`);
         return user;
     }
 
-    create(dto: CreateUserDto): UserType {
-        const newUser: UserType = {
-            id: Math.max(...this.users.map(user => user.id)) + 1,
-            ...dto,
-        };
-
-        this.users.push(newUser);
-        return newUser;
+    async create(dto: CreateUserDto): Promise<User> {
+        const newUser = this.userRepository.create(dto);
+        return this.userRepository.save(newUser);
     }
 
-    update(id: number, dto: UpdateUserDto): UserType {
-        const userIndex = this.users.findIndex((user) => user.id === id);
-        if (userIndex === -1) throw new NotFoundException(`User with id ${id} not found`);
-
-        const updatedUser = { ...this.users[userIndex], ...dto };
-        this.users[userIndex] = updatedUser;
-        return updatedUser;
+    async update(id: number, dto: UpdateUserDto): Promise<User> {
+        const user = await this.findOne(id);
+        const updated = Object.assign(user, dto);
+        return this.userRepository.save(updated);
     }
 
-    remove(id: number): void {
-        const userIndex = this.users.findIndex((user) => user.id === id);
-        if (userIndex === -1) throw new NotFoundException(`User with id ${id} not found`);
-
-        this.users.splice(userIndex, 1);
+    async remove(id: number): Promise<{ message: string }> {
+        const result = await this.userRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`User with id ${id} not found`);
+        }
+        return { message: `User with id ${id} successfully deleted` };
     }
 }
