@@ -5,6 +5,7 @@ import {
     IsArray,
     ValidateNested,
     IsPositive,
+    Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -30,6 +31,7 @@ export class CreateProductDto {
     price: number;
 
     @IsNumber()
+    @Min(0)
     stock: number;
 
     @IsNumber()
@@ -43,6 +45,9 @@ export class CreateProductDto {
 
     @IsNumber()
     sell_count: number;
+
+    @IsNumber()
+    seller_id: number;
 
     @IsArray()
     @ValidateNested({ each: true })

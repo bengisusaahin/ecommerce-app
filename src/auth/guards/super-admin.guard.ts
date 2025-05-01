@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { UserRole } from "src/users/utils/types";
 
 @Injectable()
 export class SuperAdminGuard implements CanActivate {
@@ -6,7 +7,7 @@ export class SuperAdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.body;
 
-    if (user?.role === 3) {
+    if (user?.role === UserRole.SUPERADMIN) {
       return true;
     }
 
