@@ -27,7 +27,6 @@ export class ProductsController {
     }
 
     @Post()
-    @UseGuards(AdminGuard)
     createProduct(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto): Promise<Product> {
         return this.productsService.create(createProductDto);
     }

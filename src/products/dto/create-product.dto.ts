@@ -46,9 +46,6 @@ export class CreateProductDto {
     @IsNumber()
     sell_count: number;
 
-    @IsNumber()
-    seller_id: number;
-
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => ProductImageDto)

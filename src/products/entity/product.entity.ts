@@ -21,7 +21,7 @@ export class Product extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @ManyToOne(() => User, user => user.productsSold, { nullable: false, eager: true })
+  @ManyToOne(() => User, (user) => user.productsSold, { onDelete: "SET NULL" })
   seller: User;
 
   @OneToMany(() => OrderItem, orderItem => orderItem.product)
