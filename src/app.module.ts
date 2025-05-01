@@ -27,7 +27,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         autoLoadEntities: config.get<string>('NODE_ENV') === 'development',
         synchronize: config.get<string>('NODE_ENV') === 'development',
         logging: config.get<string>('NODE_ENV') === 'development',
-        entities: [__dirname + '/**/entities/*.entity.{ts,js}'],
+        entities: [__dirname + '/**/entity/*.entity.{ts,js}'],
       }),
     }),
     UsersModule, ProductsModule, OrderModule, PaymentModule, AuthModule
