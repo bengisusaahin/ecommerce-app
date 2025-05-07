@@ -1,16 +1,7 @@
 export enum UserRole {
-  USER = 1,
-  SELLER = 2,
-  ADMIN = 3,
-  SUPERADMIN = 4,
+  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
+  USER = "USER",
+  SELLER = "SELLER",
+  GUEST = "GUEST"
 }
-
-export type UserType = {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  isActive: boolean;
-  role: UserRole;
-  birthdate: string;
-};
