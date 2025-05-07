@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { UserRole } from "../utils/types";
 
-@Entity()
+@Entity('users')
 export class User extends BaseEntity {
     @Column({ type: 'varchar', length: 100, unique: false })
     name: string;
@@ -15,13 +15,13 @@ export class User extends BaseEntity {
     @Column({ type: 'varchar', length: 100, unique: false })
     password: string;
 
-    @Column({ type: 'boolean', default: true })
+    @Column({ name: 'is_active', type: 'boolean', default: true })
     isActive: boolean;
 
     @Column({ type: 'date' })
     birthdate: Date;
 
-    @Column({ type: 'int', default: UserRole.USER })
+    @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
     role: UserRole;
 
     @OneToMany(() => Order, order => order.user)

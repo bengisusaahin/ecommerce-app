@@ -7,7 +7,7 @@ export class SuperAdminGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.body;
 
-    if (user?.role === UserRole.SUPERADMIN) {
+    if (user?.role === UserRole.SUPER_ADMIN) {
       return true;
     }
 
