@@ -5,14 +5,6 @@ export class ProductCommentDto {
     @IsString()
     productId: string;
 
-    @IsNotEmpty()
-    @IsString()
-    userId: string;
-
-    @IsNotEmpty()
-    @IsString()
-    username: string;
-
     @IsString()
     comment: string;
 
