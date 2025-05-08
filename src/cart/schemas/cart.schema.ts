@@ -11,12 +11,14 @@ export class Cart {
   @Prop({
     type: [{
       productId: String,
+      name: String,
       quantity: Number,
       price: Number,
     }],
   })
   items: Array<{
     productId: string;
+    name: string;
     quantity: number;
     price: number;
   }>;
