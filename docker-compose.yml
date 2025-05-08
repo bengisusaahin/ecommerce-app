@@ -31,7 +31,7 @@ services:
         networks:
             - commerce-network
 
-    mongodb:
+    mongo:
         image: mongo:latest
         container_name: mongodb
         ports:
@@ -65,6 +65,7 @@ services:
 volumes:
     postgres_data:
     pgadmin_data:
+    node_modules:
     mongodb_data:
 
 networks:

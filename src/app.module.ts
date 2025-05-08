@@ -36,6 +36,12 @@ import { MongooseModule } from '@nestjs/mongoose';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGO_URI'),
+        connectionFactory: (connection) => {
+          connection.on('error', (err) => {
+            console.error('MongoDB connection error:', err);
+          });
+          return connection;
+        }
       }),
     }),
     UsersModule, ProductsModule, OrderModule, PaymentModule, AuthModule
@@ -43,4 +49,4 @@ import { MongooseModule } from '@nestjs/mongoose';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
