@@ -3,8 +3,11 @@ import { ProductsService } from '../service/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
 import { Product } from '../entity/product.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRole } from 'src/users/utils/types';
 
 @Controller('products')
 export class ProductsController {
@@ -27,12 +30,15 @@ export class ProductsController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     createProduct(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto): Promise<Product> {
         return this.productsService.create(createProductDto);
     }
 
     @Put(':id')
-    @UseGuards(AdminGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     updateProduct(
         @Param('id', ParseIntPipe) id: number,
         @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
@@ -41,7 +47,8 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    @UseGuards(AdminGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     deleteProduct(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
         return this.productsService.remove(id);
     }

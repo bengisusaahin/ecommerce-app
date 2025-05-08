@@ -9,6 +9,8 @@ import { AuthController } from './controller/auth.controller';
 import { AdminGuard } from './guards/admin.guard';
 import { SuperAdminGuard } from './guards/super-admin.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
+import { OwnerOrRolesGuard } from './guards/owner-or-roles.guard';
 
 @Global()
 @Module({
@@ -30,8 +32,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
       }),
     }),
   ],
-  providers: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, JwtStrategy],
-  exports: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard],
+  providers: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, RolesGuard, OwnerOrRolesGuard, JwtStrategy],
+  exports: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, RolesGuard, OwnerOrRolesGuard],
   controllers: [AuthController],
 })
 export class AuthModule { }

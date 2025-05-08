@@ -4,13 +4,19 @@ import { CreateOrderDto } from '../dto/create-order.dto';
 import { Order } from '../entity/order.entity';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UserRole } from 'src/users/utils/types';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
 export class OrderController {
     constructor(private readonly ordersService: OrderService) {}
 
-    @Get() 
+    @Get()
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     getOrders(
         @Query('page') page?: number,
         @Query('limit') limit?: number,
@@ -21,6 +27,8 @@ export class OrderController {
     }
 
     @Get(':id')
+    @UseGuards(OwnerOrRolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     getOrderById(@Param('id', ParseIntPipe) id: number): Promise<Order> {
         return this.ordersService.findOne(id);
     }
@@ -31,6 +39,8 @@ export class OrderController {
     }
 
     @Put(':id')
+    @UseGuards(OwnerOrRolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     updateOrder(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateOrderDto: UpdateOrderDto,  
@@ -39,6 +49,8 @@ export class OrderController {
     }
 
     @Delete(':id')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     deleteOrder(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
         return this.ordersService.remove(id);
     }

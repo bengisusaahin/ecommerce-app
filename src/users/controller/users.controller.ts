@@ -5,12 +5,19 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
 import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 import { User } from '../entity/user.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { UserRole } from '../utils/types';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @Get()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
     getUsers(
         @Query('page') page?: number,
         @Query('limit') limit?: number,
@@ -22,6 +29,8 @@ export class UsersController {
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard, OwnerOrRolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
     getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
         return this.usersService.findOne(id);
     }
@@ -32,7 +41,8 @@ export class UsersController {
     }
 
     @Put(':id')
-    @UseGuards(SuperAdminGuard) 
+    @UseGuards(JwtAuthGuard, OwnerOrRolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
     updateUser(
         @Param('id', ParseIntPipe) id: number,
         @Body(CapitalizeNamePipe) updateUserDto: UpdateUserDto,
@@ -41,7 +51,8 @@ export class UsersController {
     }
 
     @Delete(':id')
-    @UseGuards(SuperAdminGuard) 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
     deleteUser(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
         return this.usersService.remove(id);
     }
