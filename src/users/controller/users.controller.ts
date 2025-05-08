@@ -1,9 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards, Request } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
-import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 import { User } from '../entity/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -14,6 +13,12 @@ import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
+
+    @Get('me')
+    @UseGuards(JwtAuthGuard)
+    getMe(@Request() req) {
+        return this.usersService.findOne(req.user.id);
+    }
 
     @Get()
     @UseGuards(JwtAuthGuard, RolesGuard)

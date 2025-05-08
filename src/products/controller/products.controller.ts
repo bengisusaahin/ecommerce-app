@@ -31,14 +31,14 @@ export class ProductsController {
 
     @Post()
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.SELLER)
     createProduct(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto): Promise<Product> {
         return this.productsService.create(createProductDto);
     }
 
     @Put(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.SELLER)
     updateProduct(
         @Param('id', ParseIntPipe) id: number,
         @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
@@ -48,7 +48,7 @@ export class ProductsController {
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+    @Roles(UserRole.ADMIN, UserRole.SELLER)
     deleteProduct(@Param('id', ParseIntPipe) id: number): Promise<{ message: string }> {
         return this.productsService.remove(id);
     }

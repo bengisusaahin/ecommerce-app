@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards, UsePipes, ValidationPipe, Request } from '@nestjs/common';
 import { OrderService } from '../service/order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { Order } from '../entity/order.entity';
@@ -12,18 +12,24 @@ import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 @Controller('orders')
 @UseGuards(JwtAuthGuard)
 export class OrderController {
-    constructor(private readonly ordersService: OrderService) {}
+    constructor(private readonly ordersService: OrderService) { }
 
     @Get()
-    @UseGuards(RolesGuard)
-    @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+    @UseGuards(OwnerOrRolesGuard)
+    @Roles(UserRole.ADMIN)
     getOrders(
+        @Request() req,
         @Query('page') page?: number,
         @Query('limit') limit?: number,
         @Query('sort') sort?: string,
         @Query('order') order?: 'asc' | 'desc',
     ): Promise<Order[]> {
-        return this.ordersService.findAll({ page, limit, sort, order });
+        const query = { page, limit, sort, order };
+        const userId = req.user.role === UserRole.ADMIN ? undefined : req.user.id;
+        if (userId) {
+            Object.assign(query, { userId });
+        }
+        return this.ordersService.findAll(query);
     }
 
     @Get(':id')
@@ -34,8 +40,15 @@ export class OrderController {
     }
 
     @Post()
-    createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-        return this.ordersService.create(createOrderDto);
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.USER, UserRole.SELLER)
+    @UsePipes(new ValidationPipe({ whitelist: true }))
+    async asynccreateOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+        try {
+            return await this.ordersService.create(createOrderDto);
+        } catch (error) {
+            throw error;
+        }
     }
 
     @Put(':id')
@@ -43,9 +56,9 @@ export class OrderController {
     @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
     updateOrder(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updateOrderDto: UpdateOrderDto,  
+        @Body() updateOrderDto: UpdateOrderDto,
     ): Promise<Order> {
-        return this.ordersService.update(id, updateOrderDto);  
+        return this.ordersService.update(id, updateOrderDto);
     }
 
     @Delete(':id')
