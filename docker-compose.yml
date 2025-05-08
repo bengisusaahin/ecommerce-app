@@ -31,6 +31,19 @@ services:
         networks:
             - commerce-network
 
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongodb_data:/data/db
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=password123
+        networks:
+            - commerce-network
+
     nest-app:
         build: 
             context: .
@@ -52,6 +65,7 @@ services:
 volumes:
     postgres_data:
     pgadmin_data:
+    mongodb_data:
 
 networks:
     commerce-network:
