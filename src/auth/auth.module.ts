@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { AuthController } from './controller/auth.controller';
 import { AdminGuard } from './guards/admin.guard';
 import { SuperAdminGuard } from './guards/super-admin.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Global()
 @Module({
@@ -29,8 +30,8 @@ import { SuperAdminGuard } from './guards/super-admin.guard';
       }),
     }),
   ],
-  providers: [AuthService, AdminGuard, SuperAdminGuard, JwtStrategy],
-  exports: [AuthService, AdminGuard, SuperAdminGuard],
+  providers: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, JwtStrategy],
+  exports: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard],
   controllers: [AuthController],
 })
 export class AuthModule { }

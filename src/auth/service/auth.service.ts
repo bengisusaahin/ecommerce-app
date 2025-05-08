@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entity/user.entity';
 import { UsersService } from 'src/users/service/users.service';
 import { LoginDto } from '../dto/login.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,8 @@ export class AuthService {
 
     async validateUser(email: string, password: string): Promise<Partial<User> | null> {
         const user = await this.usersService.findByEmail(email);
-        if (user && password === user.password) {
+        
+        if (user && await bcrypt.compare(password, user.password)) {
             const { password, ...result } = user;
             return result;
         }
@@ -21,8 +23,8 @@ export class AuthService {
     }
 
     async login(loginDto: LoginDto) {
-        const user = await this.usersService.findByEmail(loginDto.email);
-        if (!user || loginDto.password !== user.password) {
+        const user = await this.validateUser(loginDto.email, loginDto.password);
+        if (!user) {
             throw new UnauthorizedException('Geçersiz e-posta veya şifre');
         }
 

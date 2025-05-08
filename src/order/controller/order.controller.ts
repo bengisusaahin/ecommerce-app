@@ -3,8 +3,10 @@ import { OrderService } from '../service/order.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { Order } from '../entity/order.entity';
 import { UpdateOrderDto } from '../dto/update-order.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('orders')
+@UseGuards(JwtAuthGuard)
 export class OrderController {
     constructor(private readonly ordersService: OrderService) {}
 
