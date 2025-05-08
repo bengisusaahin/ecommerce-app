@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { ProductsService } from '../service/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
@@ -8,10 +8,14 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/users/utils/types';
+import UserVisitHistoryService from 'src/user-visit-history/service/user-visit-history.service';
 
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly productsService: ProductsService) { }
+    constructor(
+        private readonly productsService: ProductsService,
+        private readonly userVisitHistoryService: UserVisitHistoryService
+    ) { }
 
     @Get()
     getProducts(
@@ -25,8 +29,17 @@ export class ProductsController {
     }
 
     @Get(':id')
-    getProductById(@Param('id', ParseIntPipe) id: number): Promise<Product> {
-        return this.productsService.findOne(id);
+    async getProductById(
+        @Param('id', ParseIntPipe) id: number,
+        @Req() req: any
+    ): Promise<Product> {
+        const product = await this.productsService.findOne(id);
+        
+        if (req.user) {
+            await this.userVisitHistoryService.recordVisit(req.user.id, String(id));
+        }
+        
+        return product;
     }
 
     @Post()
