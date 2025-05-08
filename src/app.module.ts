@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
+import { ProductCommentModule } from './product-comment/product-comment.module';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { CartModule } from './cart/cart.module';
         }
       }),
     }),
-    UsersModule, ProductsModule, OrderModule, PaymentModule, AuthModule, CartModule
+    UsersModule, ProductsModule, OrderModule, PaymentModule, AuthModule, CartModule, ProductCommentModule
   ],
   controllers: [AppController],
   providers: [AppService],
