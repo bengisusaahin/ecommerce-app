@@ -11,7 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
 import { ProductCommentModule } from './product-comment/product-comment.module';
-import { UserVisitHistoryModule } from './user-visit-history/service/user-visit-history.module';
+import { UserVisitHistoryModule } from './user-visit-history/user-visit-history.module';
 
 @Module({
   imports: [

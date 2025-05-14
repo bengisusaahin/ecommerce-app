@@ -40,7 +40,7 @@ export class UsersController {
         return this.usersService.findOne(id);
     }
 
-    @Post()
+    @Post('register')
     createUser(@Body(CapitalizeNamePipe) createUserDto: CreateUserDto): Promise<User> {
         return this.usersService.create(createUserDto);
     }
