@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrderModule } from './order/order.module';
 import { PaymentModule } from './payment/payment.module';
@@ -12,6 +11,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
 import { ProductCommentModule } from './product-comment/product-comment.module';
 import { UserVisitHistoryModule } from './user-visit-history/user-visit-history.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

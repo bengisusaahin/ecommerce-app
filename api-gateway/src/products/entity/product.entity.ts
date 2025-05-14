@@ -1,7 +1,7 @@
 import { OrderItem } from "src/order/entity/order-item.entity";
 import { User } from "src/users/entity/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BaseEntity } from 'src/common/entity/base.entity';
+import { BaseEntity } from 'src/users/entity/base.entity';
 import { ProductImage } from "./product-image.entity";
 
 @Entity('products')

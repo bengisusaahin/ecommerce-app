@@ -1,13 +1,28 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './controller/users.controller';
-import { UsersService } from './service/users.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    ConfigModule,
+    ClientsModule.registerAsync([
+      {
+        name: 'USERS_MICROSERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: config.get('USERS_MICROSERVICE_HOST'), // docker container name
+            port: config.get<number>('USERS_MICROSERVICE_PORT'),
+          },
+        }),
+      },
+    ]),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService, TypeOrmModule],
 })
-export class UsersModule {}
+export class UsersModule { }
