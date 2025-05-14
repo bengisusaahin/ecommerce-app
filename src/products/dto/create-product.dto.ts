@@ -6,6 +6,8 @@ import {
     ValidateNested,
     IsPositive,
     Min,
+    IsOptional,
+    IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -35,8 +37,13 @@ export class CreateProductDto {
     @Min(0)
     stock: number;
 
+    @IsOptional()
+    @IsBoolean()
+    is_active: boolean;
+
+    @IsNotEmpty()
     @IsNumber()
-    store_id: number;
+    seller_id: number;
 
     @IsNumber()
     category_id: number;

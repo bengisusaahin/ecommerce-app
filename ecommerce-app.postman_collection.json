@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "919d7d3b-c65f-4c27-a605-8d9486f94eb4",
+		"_postman_id": "6dd734b2-0191-4ea7-940b-4030929b2903",
 		"name": "ecommerce-app",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "37633201"
@@ -21,7 +21,8 @@
 									"    pm.environment.set('TOKEN', jsonData.access_token);",
 									"}"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -35,7 +36,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}",
+							"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"123456\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -54,7 +55,8 @@
 								"login"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -100,7 +102,8 @@
 								}
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get Profile",
@@ -125,7 +128,8 @@
 								"me"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get User By Id",
@@ -150,7 +154,8 @@
 								"3"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Create User",
@@ -178,7 +183,8 @@
 								"register"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Update User",
@@ -201,7 +207,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/3",
+							"raw": "http://localhost:3000/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -209,10 +215,11 @@
 							"port": "3000",
 							"path": [
 								"users",
-								"3"
+								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Delete User",
@@ -237,7 +244,8 @@
 								"3"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -260,7 +268,8 @@
 								"products"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Product By Id",
@@ -268,7 +277,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/products/2",
+							"raw": "http://localhost:3000/products/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -276,10 +285,11 @@
 							"port": "3000",
 							"path": [
 								"products",
-								"2"
+								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Create Product",
@@ -294,7 +304,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Vestel\",\n    \"description\": \"Buzdolabı\",\n    \"price\": 2500,\n    \"stock\": 50,\n    \"rating\": 5\n}",
+							"raw": "{\n  \"name\": \"Deneme Ürünü\",\n  \"description\": \"Harika bir ürün!\",\n  \"price\": 99.99,\n  \"stock\": 20,\n  \"is_active\": true,\n  \"rating\": 4.5,\n  \"sell_count\": 12,\n  \"category_id\": 1,\n  \"seller_id\": 1,\n  \"images\": [\n    { \"url\": \"https://via.placeholder.com/150\", \"index\": 0 },\n    { \"url\": \"https://via.placeholder.com/200\", \"index\": 1 }\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,7 +312,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/products/register",
+							"raw": "http://localhost:3000/products/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -310,10 +320,11 @@
 							"port": "3000",
 							"path": [
 								"products",
-								"register"
+								""
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Update Product",
@@ -328,7 +339,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Arçelik\",\n    \"description\": \"Buzdolabı\",\n    \"price\": 2500,\n    \"stock\": 50,\n    \"rating\": 5\n}",
+							"raw": "{\n  \"name\": \"Güncellenmiş Ürün\",\n  \"description\": \"Güncellendi\",\n  \"price\": 129.99,\n  \"stock\": 15,\n  \"is_active\": true,\n  \"rating\": 4.8,\n  \"sell_count\": 30,\n  \"category_id\": 1,\n  \"seller_id\": 1,\n  \"images\": [\n    { \"url\": \"https://via.placeholder.com/300\", \"index\": 0 }\n  ]\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -336,7 +347,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/products/2",
+							"raw": "http://localhost:3000/products/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -344,10 +355,11 @@
 							"port": "3000",
 							"path": [
 								"products",
-								"2"
+								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Product",
@@ -361,7 +373,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3000/products/2",
+							"raw": "http://localhost:3000/products/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -369,10 +381,11 @@
 							"port": "3000",
 							"path": [
 								"products",
-								"2"
+								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -401,7 +414,8 @@
 								"orders"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get Order By Id",
@@ -426,7 +440,8 @@
 								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Create Order",
@@ -459,7 +474,8 @@
 								"orders"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Update Order",
@@ -493,7 +509,8 @@
 								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Order",
@@ -518,7 +535,8 @@
 								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -547,7 +565,8 @@
 								"cart"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Add Cart",
@@ -581,7 +600,8 @@
 								"add"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get Cart",
@@ -605,7 +625,8 @@
 								"cart"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Update Cart",
@@ -639,7 +660,8 @@
 								"update"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Clear Cart",
@@ -664,7 +686,8 @@
 								"clear"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Remove Item from Cart",
@@ -698,7 +721,8 @@
 								"remove"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -736,7 +760,8 @@
 								"comments"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get Comments",
@@ -754,7 +779,8 @@
 								"comments"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Get Average Rating",
@@ -774,7 +800,8 @@
 								"3"
 							]
 						}
-					}
+					},
+					"response": []
 				},
 				{
 					"name": "Delete Own Comment",
@@ -799,7 +826,8 @@
 								"1"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -828,7 +856,8 @@
 								"user-visit-history"
 							]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		}
