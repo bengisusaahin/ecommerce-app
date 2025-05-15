@@ -4,7 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { JwtPayload } from './utils/types';
 import { LoginDto } from './dto/login.dto';
 import { firstValueFrom } from 'rxjs';
-import { UserDto } from './dto/user.dto';
+import { UserDto } from './dto/user-response.dto';
 
 @Injectable()
 export class AppService {

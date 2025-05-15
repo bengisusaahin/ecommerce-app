@@ -1,3 +1,4 @@
+import e from 'express';
 import { UserRole } from '../utils/types';
 
 export class UserResponseDto {
@@ -10,4 +11,8 @@ export class UserResponseDto {
   constructor(partial: Partial<UserResponseDto>) {
     Object.assign(this, partial);
   }
+}
+
+export class UserDto extends UserResponseDto {
+  password: string;
 }

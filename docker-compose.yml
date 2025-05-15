@@ -30,6 +30,19 @@ services:
         networks:
             - commerce-network
 
+    auth-microservice:
+        build: 
+            context: ./auth-microservice
+            dockerfile: Dockerfile
+        container_name: auth_microservice_container
+        depends_on:
+            - users-microservice
+        env_file:
+            - .env
+        networks:
+            - commerce-network
+        command: npm run start:dev
+
     users-microservice:
         build: 
             context: ./users-microservice

@@ -1,39 +1,29 @@
 import { Global, Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './service/auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { UsersModule } from '../users/users.module';
 import { AuthController } from './controller/auth.controller';
-import { AdminGuard } from './guards/admin.guard';
-import { SuperAdminGuard } from './guards/super-admin.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RolesGuard } from './guards/roles.guard';
-import { OwnerOrRolesGuard } from './guards/owner-or-roles.guard';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-@Global()
 @Module({
   imports: [
-    ConfigModule, UsersModule,
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-      property: 'user',
-      session: false,
-    }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '1d'),
-        },
-      }),
-    }),
+    ConfigModule,
+    ClientsModule.registerAsync([
+      {
+        name: 'AUTH_MICROSERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: config.get('AUTH_MICROSERVICE_HOST'),
+            port: config.get<number>('AUTH_MICROSERVICE_PORT'),
+          },
+        }),
+      },
+    ]),
   ],
-  providers: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, RolesGuard, OwnerOrRolesGuard, JwtStrategy],
-  exports: [AuthService, AdminGuard, SuperAdminGuard, JwtAuthGuard, RolesGuard, OwnerOrRolesGuard],
   controllers: [AuthController],
+  providers: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
+
