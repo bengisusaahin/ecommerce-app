@@ -25,8 +25,6 @@ services:
             PGADMIN_CONFIG_SERVER_MODE: "False"
         ports:
             - "${PGADMIN_PORT:-5050}:80"
-        depends_on:
-            - postgres
         volumes:
             - pgadmin_data:/var/lib/pgadmin
         networks:
@@ -38,15 +36,12 @@ services:
             dockerfile: Dockerfile
         container_name: users_microservice_container
         depends_on:
-            - postgres
+            - users-pg-db
         env_file:
             - .env
         networks:
             - commerce-network
         command: npm run start:dev
-        volumes:
-            - ./users-microservice:/app
-            - /app/node_modules
         
     api-gateway:
         build: 
@@ -62,14 +57,11 @@ services:
         ports:
             - '3000:3000'
         command: npm run start:dev
-        volumes:
-            - ./api-gateway:/app
-            - /app/node_modules
 
 volumes:
-    postgres_data:
     pgadmin_data:
     node_modules:
+    users-pg-data:
 
 networks:
     commerce-network:

@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
+import { UserResponseDto } from './dto/user-response.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) { }
+
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    const user = this.userRepository.create(createUserDto);
+    const savedUser = await this.userRepository.save(user);
+    return new UserResponseDto(savedUser);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(
+    params: PaginationParams
+  ): Promise<PaginatedResult<UserResponseDto>> {
+    const { page = 1, sort = 'id', order = 'asc', limit = 10 } = params;
+
+    const [users, total] = await this.userRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: {
+        [sort]: order.toUpperCase() as SortOrder,
+      },
+    });
+
+    const data = users.map(
+      (user) =>
+        new UserResponseDto({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          birthdate: user.birthdate,
+        }),
+    );
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException(`User with ID ${id} not found`);
+    return new UserResponseDto(user);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async findByEmail(email: string): Promise<UserResponseDto> {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) throw new NotFoundException(`User with email ${email} not found`);
+    return new UserResponseDto(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+    const { id: _, ...updateData } = updateUserDto;
+    const user = await this.userRepository.preload({
+      id,
+      ...updateData,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const updatedUser = await this.userRepository.save(user);
+    return new UserResponseDto(updatedUser);
   }
+
+  async remove(id: number): Promise<{ message: string }> {
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return { message: `User with ID ${id} has been removed` };
+  }
+
 }
