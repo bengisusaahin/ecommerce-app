@@ -22,6 +22,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: config.get<string>('NODE_ENV') === 'development',
         logging: config.get<string>('NODE_ENV') === 'development',
         //entities: [__dirname + '/**/entities/*.entity.{ts,js}'],
+        cache: { duration: config.get<number>('TYPEORM_CACHE_DURATION') }
       }),
     }),
     UsersModule,

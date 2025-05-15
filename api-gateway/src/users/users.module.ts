@@ -15,7 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         useFactory: (config: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: config.get('USERS_MICROSERVICE_HOST'), // docker container name
+            host: config.get('USERS_MICROSERVICE_HOST'), 
             port: config.get<number>('USERS_MICROSERVICE_PORT'),
           },
         }),

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsBoolean, IsEnum, IsDateString, IsString, MinLength, IsStrongPassword, IsOptional } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsBoolean, IsEnum, IsString, IsStrongPassword, IsOptional } from 'class-validator';
 import { UserRole } from '../utils/types';
 
 export class CreateUserDto {
