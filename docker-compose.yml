@@ -62,6 +62,7 @@ services:
             dockerfile: Dockerfile
         container_name: api_gateway_container
         depends_on:
+            - auth-microservice
             - users-microservice
         env_file:
             - .env
