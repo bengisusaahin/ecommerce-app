@@ -1,26 +1,128 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Order } from './entities/order.entity';
+import { Repository } from 'typeorm';
+import { OrderItem } from './entities/order-item.entity';
+import { plainToInstance } from 'class-transformer';
+import { OrderResponseDto } from './dto/order-response.dto';
+import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
 
 @Injectable()
 export class OrdersService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+
+  constructor(
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+
+    @InjectRepository(OrderItem)
+    private readonly orderItemRepository: Repository<OrderItem>,
+  ) { }
+
+  async create(dto: CreateOrderDto): Promise<OrderResponseDto> {
+    const order = this.orderRepository.create({
+      userId: dto.userId,
+      totalPrice: dto.totalPrice,
+    });
+    const savedOrder = await this.orderRepository.save(order);
+
+    const orderItems = dto.orderItems.map((item) =>
+      this.orderItemRepository.create({
+        orderId: savedOrder.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.unitPrice,
+        totalPrice: item.totalPrice,
+      }),
+    );
+
+    const savedItems = await this.orderItemRepository.save(orderItems);
+
+    return plainToInstance(
+      OrderResponseDto,
+      {
+        id: savedOrder.id,
+        userId: savedOrder.userId,
+        totalPrice: savedOrder.totalPrice,
+        items: savedItems,
+      },
+      { excludeExtraneousValues: true },
+    );
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll(
+    params: PaginationParams = {} as PaginationParams,
+  ): Promise<PaginatedResult<OrderResponseDto>> {
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
+    const sort = params.sort || 'id';
+    const order = (params.order || 'ASC').toUpperCase() as SortOrder;
+    const [orders, total] = await this.orderRepository.findAndCount({
+      relations: ['items'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { [sort]: order },
+    });
+    return {
+      data: plainToInstance(OrderResponseDto, orders, {
+        excludeExtraneousValues: true,
+      }),
+      total,
+      page,
+      limit,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: number): Promise<OrderResponseDto> {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: ['items'],
+    });
+    if (!order) throw new NotFoundException(`Order ${id} not found`);
+    return plainToInstance(OrderResponseDto, order, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: number, dto: UpdateOrderDto): Promise<OrderResponseDto> {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: ['items'],
+    });
+    if (!order) throw new NotFoundException(`Order ${id} not found`);
+
+    if (dto.totalPrice) order.totalPrice = dto.totalPrice;
+
+    if (dto.orderItems) {
+      await this.orderItemRepository.remove(order.items);
+      const newItems = dto.orderItems.map((item) =>
+        this.orderItemRepository.create({
+          order,
+          productId: item.productId,
+          quantity: item.quantity,
+          price: item.unitPrice,
+          totalPrice: item.totalPrice,
+        }),
+      );
+      order.items = await this.orderItemRepository.save(newItems);
+    }
+
+    const updated = await this.orderRepository.save(order);
+    const result = await this.orderRepository.findOne({
+      where: { id: updated.id },
+      relations: ['items'],
+    });
+
+    return plainToInstance(OrderResponseDto, result, {
+      excludeExtraneousValues: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: number): Promise<{ message: string }> {
+    const deleted = await this.orderRepository.delete(id);
+    if (deleted.affected === 0)
+      throw new NotFoundException(`Order ${id} not found`);
+    return { message: `Order ${id} deleted successfully` };
   }
 }
