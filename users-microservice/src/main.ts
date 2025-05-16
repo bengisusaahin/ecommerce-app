@@ -21,6 +21,6 @@ async function bootstrap() {
     },
   );
   await app.listen();
-  console.log(`Users Microservice ${port} portunda hazır ve nazır beklemektedir!`);
+  console.log(`Users microservice running on ${host}:${port}`);
 }
 bootstrap();
