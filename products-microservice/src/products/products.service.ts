@@ -37,7 +37,7 @@ export class ProductsService {
 
   async findAll(): Promise<ProductResponseDto[]> {
     const products = await this.productRepository.find();
-    
+
     const results = await Promise.all(
       products.map(async (product) => {
         const images = await this.imageRepository.find({
@@ -52,6 +52,12 @@ export class ProductsService {
     );
 
     return results;
+  }
+
+  async findBySeller(sellerId: number) {
+    return this.productRepository.find({
+      where: { sellerId },
+    });
   }
 
   async findOne(id: number): Promise<ProductResponseDto> {

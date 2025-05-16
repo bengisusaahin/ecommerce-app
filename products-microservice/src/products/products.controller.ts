@@ -7,7 +7,7 @@ import { PRODUCT_PATTERNS } from 'src/utils/types';
 
 @Controller()
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @MessagePattern({ cmd: PRODUCT_PATTERNS.Create })
   create(@Payload() createProductDto: CreateProductDto) {
@@ -24,10 +24,15 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.FindBySeller })
+  findBySeller(@Payload() payload: { sellerId: number }) {
+    return this.productsService.findBySeller(payload.sellerId);
+  }
+
   @MessagePattern({ cmd: PRODUCT_PATTERNS.Update })
   update(@Payload() updatePayload: { id: number; data: UpdateProductDto }) {
-  return this.productsService.update(updatePayload.id, updatePayload.data);
-}
+    return this.productsService.update(updatePayload.id, updatePayload.data);
+  }
 
   @MessagePattern({ cmd: PRODUCT_PATTERNS.Remove })
   remove(@Payload() id: number) {

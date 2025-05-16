@@ -26,6 +26,12 @@ export class ProductsController {
         return this.productsService.findAll(query);
     }
 
+    @Get('seller/:sellerId')
+    findBySeller(@Param('sellerId') sellerId: number) {
+        return this.productsService.findBySeller(sellerId);
+    }
+
+
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     findOne(@Param('id', ParseIntPipe) id: number) {

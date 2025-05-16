@@ -1,4 +1,4 @@
-import { Inject, Injectable} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PaginationParams, PRODUCT_PATTERNS } from '../utils/types';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -25,6 +25,10 @@ export class ProductsService {
         );
     }
 
+    findBySeller(sellerId: number) {
+        this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.FindBySeller }, { sellerId });
+    }
+
     findOne(id: number) {
         return this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.FindOne }, { id });
     }
@@ -37,6 +41,6 @@ export class ProductsService {
     }
 
     remove(id: number) {
-        this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.Remove }, { id });
+        return this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.Remove }, { id });
     }
 }
