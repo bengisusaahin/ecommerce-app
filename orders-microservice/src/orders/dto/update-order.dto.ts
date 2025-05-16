@@ -1,6 +1,17 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOrderDto } from './create-order.dto';
+import { IsArray, IsNumber, IsOptional, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateOrderItemDto } from './create-order-item.dto';
 
-export class UpdateOrderDto extends PartialType(CreateOrderDto) {
-  id: number;
+export class UpdateOrderDto {
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDto)
+  orderItems?: CreateOrderItemDto[];
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  totalPrice?: number;
 }
+
