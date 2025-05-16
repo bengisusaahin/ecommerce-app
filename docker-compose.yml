@@ -44,6 +44,17 @@ services:
         networks:
         - commerce-network  
 
+    cart-mongo-db:
+        image: mongo
+        container_name: cart-mongo-db
+        restart: always
+        ports:
+        - '27017:27017'
+        volumes:
+        - cart-mongo-data:/data/db  
+        networks:
+        - commerce-network  
+
     pgadmin:
         image: dpage/pgadmin4
         container_name: pgadmin_container
@@ -70,6 +81,19 @@ services:
             - .env
         networks:
             - commerce-network
+        command: npm run start:dev
+
+    cart-microservice:
+        build:
+            context: ./cart-microservice
+            dockerfile: Dockerfile
+        container_name: cart_microservice_container
+        depends_on:
+        - cart-mongo-db
+        env_file:
+            - .env
+        networks:
+            - commerce-network  
         command: npm run start:dev
 
     products-microservice:
@@ -131,6 +155,7 @@ services:
 volumes:
     pgadmin_data:
     node_modules:
+    cart-mongo-data:
     users-pg-data:
     products-pg-data:   
     orders-pg-data: 
