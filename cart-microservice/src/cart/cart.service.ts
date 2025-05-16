@@ -1,26 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Cart } from './entities/cart.entity';
+import { Model } from 'mongoose';
+import { CartDocument } from './schema/cart.schema';
 
 @Injectable()
 export class CartService {
-  create(createCartDto: CreateCartDto) {
-    return 'This action adds a new cart';
+  constructor(
+    @InjectModel(Cart.name)
+    private readonly cartModel: Model<CartDocument>,
+  ) { }
+
+  async getCart(userId: string) {
+    const cart = await this.cartModel.findOne({ userId });
+    if (!cart) throw new NotFoundException('Cart not found');
+    return cart;
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  async addToCart(createCartDto: CreateCartDto) {
+    const cart = await this.cartModel.findOne({ userId: createCartDto.userId });
+
+    if (!cart) {
+      return this.cartModel.create({
+        userId: createCartDto.userId,
+        items: [
+          {
+            productId: createCartDto.productId,
+            name: createCartDto.name,
+            price: createCartDto.price,
+            quantity: createCartDto.quantity,
+          },
+        ],
+      });
+    }
+
+    const itemIndex = cart.items.findIndex(
+      (item) => item.productId === createCartDto.productId,
+    );
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity += createCartDto.quantity;
+    } else {
+      cart.items.push({
+        productId: createCartDto.productId,
+        name: createCartDto.name,
+        price: createCartDto.price,
+        quantity: createCartDto.quantity,
+      });
+    }
+
+    return cart.save();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
+  async updateCart(userId: string, productId: string, quantity: number) {
+    const cart = await this.cartModel.findOne({ userId });
+    if (!cart) throw new NotFoundException('Cart not found');
+
+    const item = cart.items.find((i) => i.productId === productId);
+    if (!item) throw new NotFoundException('Item not found');
+
+    item.quantity = quantity;
+    return cart.save();
   }
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
+  async clearCart(userId: string) {
+    return this.cartModel.deleteOne({ userId });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+  async removeItem(userId: string, productId: string) {
+    return this.cartModel.findOneAndUpdate(
+      { userId },
+      { $pull: { items: { productId } } },
+      { new: true },
+    );
   }
 }
