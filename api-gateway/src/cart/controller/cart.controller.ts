@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Body, Param, UseGuards, Request, Put } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, Param, UseGuards, Request, Put, UsePipes, ValidationPipe, Req, Query } from '@nestjs/common';
 import { CartService } from '../service/cart.service';
 import { AddToCartDto } from '../dto/add-to-cart.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -7,34 +7,37 @@ import { UpdateCartDto } from '../dto/update-cart.dto';
 @Controller('cart')
 @UseGuards(JwtAuthGuard)
 export class CartController {
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly cartService: CartService) { }
 
   @Post('add')
-  addToCart(@Request() req, @Body() dto: AddToCartDto) {
-    dto.userId = req.user.id;
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  addToCart(@Body() dto: AddToCartDto, @Req() req) {
+    dto.userId = req.user.sub;
     return this.cartService.addToCart(dto);
   }
 
   @Get()
-  getCart(@Request() req) {
-    return this.cartService.getCart(req.user.id);
+  getCart(@Req() req) {
+    return this.cartService.getCart(req.user.sub);
   }
 
   @Delete('clear')
-  clearCart(@Request() req) {
-    return this.cartService.clearCart(req.user.id);
+  clearCart(@Req() req) {
+    return this.cartService.clearCart(req.user.sub);
   }
 
   @Put('update')
-  updateCart(
-    @Request() req,
-    @Body() dto: UpdateCartDto
-  ) {
-    return this.cartService.updateCart(req.user.id, dto.productId, dto.quantity);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  updateCart(@Request() req, @Body() dto: UpdateCartDto) {
+    dto.userId = req.user.sub;
+    return this.cartService.updateCart(dto);
   }
 
   @Delete('remove')
-  async removeItem(@Request() req, @Body('productId') productId: string) {
-    return this.cartService.removeFromCart(req.user.id, productId);
+  removeItem(@Req() req, @Query('productId') productId: string) {
+    return this.cartService.removeItem({
+      userId: req.user.sub,
+      productId,
+    });
   }
 }

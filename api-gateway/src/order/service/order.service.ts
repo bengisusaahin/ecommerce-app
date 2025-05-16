@@ -1,5 +1,4 @@
 import { Get, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { Order } from '../entity/order.entity';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { ClientProxy } from '@nestjs/microservices';

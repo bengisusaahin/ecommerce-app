@@ -1,16 +1,25 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Cart, CartSchema } from './schemas/cart.schema';
-import { ProductsModule } from '../products/products.module';
 import { CartService } from './service/cart.service';
 import { CartController } from './controller/cart.controller';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Cart.name, schema: CartSchema }
+    ClientsModule.registerAsync([
+      {
+        name: 'CART_MICROSERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            host: config.get('CART_MICROSERVICE_HOST'),
+            port: config.get<number>('CART_MICROSERVICE_PORT'),
+          },
+        }),
+      },
     ]),
-    ProductsModule,
   ],
   controllers: [CartController],
   providers: [CartService],
