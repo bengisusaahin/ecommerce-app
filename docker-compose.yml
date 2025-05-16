@@ -14,6 +14,20 @@ services:
             - ./db/init-scripts:/docker-entrypoint-initdb.d
         networks:
             - commerce-network
+    products-pg-db:
+        image: postgres:16
+        container_name: nest-products-pg-db
+        restart: always
+        ports:
+        - '5434:5432' 
+        environment:
+        POSTGRES_USER: ${PRODUCTS_POSTGRES_USER}
+        POSTGRES_PASSWORD: ${PRODUCTS_POSTGRES_PASSWORD}
+        POSTGRES_DB: ${PRODUCTS_POSTGRES_DB}
+        volumes:
+        - products-pg-data:/var/lib/postgresql/data
+        networks:
+        - commerce-network  
 
     pgadmin:
         image: dpage/pgadmin4
@@ -43,6 +57,19 @@ services:
             - commerce-network
         command: npm run start:dev
 
+    products-microservice:
+        build: 
+            context: ./products-microservice
+            dockerfile: Dockerfile
+        container_name: products_microservice_container
+        depends_on:
+            - products-pg-db
+        env_file:
+            - .env
+        networks:
+            - commerce-network
+        command: npm run start:dev
+
     users-microservice:
         build: 
             context: ./users-microservice
@@ -63,6 +90,7 @@ services:
         container_name: api_gateway_container
         depends_on:
             - auth-microservice
+            - products-microservice
             - users-microservice
         env_file:
             - .env
@@ -76,6 +104,7 @@ volumes:
     pgadmin_data:
     node_modules:
     users-pg-data:
+    products-pg-data:    
 
 networks:
     commerce-network:
