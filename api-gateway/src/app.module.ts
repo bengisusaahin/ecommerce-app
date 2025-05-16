@@ -1,38 +1,34 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { OrderModule } from './order/order.module';
-import { PaymentModule } from './payment/payment.module';
 import { AuthModule } from './auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
-import { ProductCommentModule } from './product-comment/product-comment.module';
-import { UserVisitHistoryModule } from './user-visit-history/user-visit-history.module';
 import { UsersModule } from './users/users.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRootAsync({
+    JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
-        connectionFactory: (connection) => {
-          connection.on('error', (err) => {
-            console.error('MongoDB connection error:', err);
-          });
-          return connection;
-        }
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: 'JWT_EXPIRES_IN' },
       }),
+      global: true,
     }),
-    UsersModule, ProductsModule, OrderModule, PaymentModule, AuthModule, CartModule, ProductCommentModule, UserVisitHistoryModule
+    UsersModule,
+    AuthModule,
+    ProductsModule,
+    OrderModule,
+    CartModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [JwtStrategy],
 })
-export class AppModule { }
+export class AppModule {}
+
