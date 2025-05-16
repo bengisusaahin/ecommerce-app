@@ -1,81 +1,42 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable} from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { PaginationParams, PRODUCT_PATTERNS } from '../utils/types';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from '../entity/product.entity';
-import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
     constructor(
-        @InjectRepository(Product)
-        private readonly productRepository: Repository<Product>,
+        @Inject('PRODUCTS_MICROSERVICE')
+        private readonly productsMicroservice: ClientProxy,
     ) { }
 
-    async findAll(query: {
-        page?: number;
-        limit?: number;
-        sort?: keyof Product;
-        order?: 'asc' | 'desc';
-        search?: string;
-    }): Promise<Product[]> {
-        const { page = 1, limit = 10, sort = 'id', order = 'asc', search } = query;
-
-        const where = search
-            ? [
-                { name: ILike(`%${search}%`) },
-                { description: ILike(`%${search}%`) },
-            ]
-            : undefined;
-
-        return this.productRepository.find({
-            where,
-            order: { [sort]: order.toUpperCase() as 'ASC' | 'DESC' },
-            skip: (page - 1) * limit,
-            take: limit,
-        });
+    create(createProductDto: CreateProductDto) {
+        return this.productsMicroservice.send(
+            { cmd: PRODUCT_PATTERNS.Create },
+            createProductDto,
+        );
     }
 
-    async findOne(id: number): Promise<Product> {
-        const product = await this.productRepository.findOne({ where: { id } });
-        if (!product) throw new NotFoundException(`Product with id ${id} not found`);
-        return product;
+    findAll(pagination: PaginationParams) {
+        return this.productsMicroservice.send(
+            { cmd: PRODUCT_PATTERNS.FindAll },
+            pagination,
+        );
     }
 
-    async create(dto: CreateProductDto): Promise<Product> {
-
-        if (dto.price <= 0) {
-            throw new BadRequestException('Price must be greater than 0');
-        }
-
-        if (dto.stock < 0) {
-            throw new BadRequestException('Stock cannot be negative');
-        }
-        
-        const newProduct = this.productRepository.create(dto);
-        return this.productRepository.save(newProduct);
+    findOne(id: number) {
+        return this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.FindOne }, { id });
     }
 
-    async update(id: number, dto: UpdateProductDto): Promise<Product> {
-        const product = await this.findOne(id);
-
-        if (dto.price && dto.price <= 0) {
-            throw new BadRequestException('Price must be greater than 0');
-        }
-
-        if (dto.stock && dto.stock < 0) {
-            throw new BadRequestException('Stock cannot be negative');
-        }
-        
-        const updated = Object.assign(product, dto);
-        return this.productRepository.save(updated);
+    update(id: number, dto: UpdateProductDto) {
+        return this.productsMicroservice.send(
+            { cmd: PRODUCT_PATTERNS.Update },
+            { id, updateProductDto: dto },
+        );
     }
 
-    async remove(id: number): Promise<{ message: string }> {
-        const result = await this.productRepository.delete(id);
-        if (result.affected === 0) {
-            throw new NotFoundException(`Product with id ${id} not found`);
-        }
-        return { message: `Product with id ${id} successfully deleted` };
+    remove(id: number) {
+        this.productsMicroservice.send({ cmd: PRODUCT_PATTERNS.Remove }, { id });
     }
 }

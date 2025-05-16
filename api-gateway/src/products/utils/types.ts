@@ -1,3 +1,11 @@
+export enum UserRole {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
+  USER = "USER",
+  SELLER = "SELLER",
+  GUEST = "GUEST"
+}
+
 export type ProductImage = {
     url: string;
     index: number;
@@ -16,3 +24,20 @@ export type ProductImage = {
     images: ProductImage[];
   };
   
+  export const PRODUCT_PATTERNS = {
+  FindAll: 'Products.FindAll',
+  FindOne: 'Products.FindOne',
+  Create: 'Products.Create',
+  Update: 'Products.Update',
+  Remove: 'Products.Remove',
+};
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: SortOrder,
+  search?: string;
+}
+
+export type SortOrder = "ASC" | "DESC";
