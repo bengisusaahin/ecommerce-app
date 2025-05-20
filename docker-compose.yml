@@ -4,7 +4,7 @@ services:
         container_name: nest-users-pg-db
         restart: always
         ports:
-        - "5432:5432"
+            - "5432:5432"
         environment:
             POSTGRES_USER: ${USERS_POSTGRES_USER}
             POSTGRES_PASSWORD: ${USERS_POSTGRES_PASSWORD}
@@ -19,41 +19,41 @@ services:
         container_name: nest-products-pg-db
         restart: always
         ports:
-        - '5433:5432' 
+            - '5433:5432' 
         environment:
-        POSTGRES_USER: ${PRODUCTS_POSTGRES_USER}
-        POSTGRES_PASSWORD: ${PRODUCTS_POSTGRES_PASSWORD}
-        POSTGRES_DB: ${PRODUCTS_POSTGRES_DB}
+            POSTGRES_USER: ${PRODUCTS_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${PRODUCTS_POSTGRES_PASSWORD}
+            POSTGRES_DB: ${PRODUCTS_POSTGRES_DB}
         volumes:
-        - products-pg-data:/var/lib/postgresql/data
+            - products-pg-data:/var/lib/postgresql/data
         networks:
-        - commerce-network  
+            - commerce-network  
     
     orders-pg-db:
         image: postgres:16
         container_name: nest-orders-pg-db
         restart: always
         ports:
-        - '5434:5432'
+            - '5434:5432'
         environment:
-        POSTGRES_USER: ${ORDERS_POSTGRES_USER}
-        POSTGRES_PASSWORD: ${ORDERS_POSTGRES_PASSWORD}
-        POSTGRES_DB: ${ORDERS_POSTGRES_DB}
+            POSTGRES_USER: ${ORDERS_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${ORDERS_POSTGRES_PASSWORD}
+            POSTGRES_DB: ${ORDERS_POSTGRES_DB}
         volumes:
-        - orders-pg-data:/var/lib/postgresql/data
+            - orders-pg-data:/var/lib/postgresql/data
         networks:
-        - commerce-network  
+            - commerce-network  
 
     cart-mongo-db:
         image: mongo
         container_name: cart-mongo-db
         restart: always
         ports:
-        - '27017:27017'
+            - '27017:27017'
         volumes:
-        - cart-mongo-data:/data/db  
+            - cart-mongo-data:/data/db  
         networks:
-        - commerce-network  
+            - commerce-network  
 
     pgadmin:
         image: dpage/pgadmin4
@@ -89,7 +89,7 @@ services:
             dockerfile: Dockerfile
         container_name: cart_microservice_container
         depends_on:
-        - cart-mongo-db
+            - cart-mongo-db
         env_file:
             - .env
         networks:
@@ -111,7 +111,7 @@ services:
 
     orders-microservice:
         build:
-            context: ./orders-microservices
+            context: ./orders-microservice
             dockerfile: Dockerfile
         container_name: orders_microservice_container
         depends_on:

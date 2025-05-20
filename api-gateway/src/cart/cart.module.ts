@@ -3,6 +3,7 @@ import { CartService } from './service/cart.service';
 import { CartController } from './controller/cart.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         }),
       },
     ]),
+    AuthModule
   ],
   controllers: [CartController],
   providers: [CartService],
