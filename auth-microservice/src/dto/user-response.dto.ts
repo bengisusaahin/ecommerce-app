@@ -1,12 +1,21 @@
-import e from 'express';
+import { Expose } from 'class-transformer';
 import { UserRole } from '../utils/types';
 
 export class UserResponseDto {
+  @Expose()
   id: number;
+
+  @Expose()
   name: string;
+
+  @Expose()
   email: string;
-  birthdate: Date;
+
+  @Expose()
   role: UserRole;
+
+  @Expose()
+  birthdate: Date;
 
   constructor(partial: Partial<UserResponseDto>) {
     Object.assign(this, partial);
@@ -14,5 +23,6 @@ export class UserResponseDto {
 }
 
 export class UserDto extends UserResponseDto {
+  @Expose()
   password: string;
 }
