@@ -1,10 +1,12 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { JwtPayload } from './utils/types';
 import { LoginDto } from './dto/login.dto';
 import { firstValueFrom } from 'rxjs';
 import { UserDto } from './dto/user-response.dto';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Injectable()
 export class AppService {
@@ -23,7 +25,10 @@ export class AppService {
       ),
     );
     if (!user || user.password !== password) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new RpcException({
+        status: 'error',
+        message: 'Invalid credentials'
+      });
     }
     return user;
   }
@@ -31,7 +36,10 @@ export class AppService {
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new RpcException({
+        status: 'error',
+        message: 'User not found'
+      });
     }
 
     const payload: JwtPayload = {
@@ -42,11 +50,7 @@ export class AppService {
 
     return {
       access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
+      user: plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }),
     };
   }
 
@@ -54,7 +58,10 @@ export class AppService {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      throw new UnauthorizedException();
+      throw new RpcException({
+        status: 'error',
+        message: 'Invalid token'
+      });
     }
   }
 }

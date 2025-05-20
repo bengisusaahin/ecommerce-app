@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
@@ -6,6 +6,8 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { RpcException } from '@nestjs/microservices';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +20,9 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const user = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(user);
-    return new UserResponseDto(savedUser);
+    return plainToInstance(UserResponseDto, savedUser, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async findAll(
@@ -34,15 +38,9 @@ export class UsersService {
       },
     });
 
-    const data = users.map(
-      (user) =>
-        new UserResponseDto({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          birthdate: user.birthdate,
-        }),
-    );
+    const data = plainToInstance(UserResponseDto, users, {
+      excludeExtraneousValues: true,
+    });
 
     return {
       data,
@@ -54,14 +52,28 @@ export class UsersService {
 
   async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOneBy({ id });
-    if (!user) throw new NotFoundException(`User with ID ${id} not found`);
-    return new UserResponseDto(user);
+    if (!user) {
+      throw new RpcException({
+        status: 'error',
+        message: `User with ID ${id} not found`
+      });
+    }
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async findByEmail(email: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findOneBy({ email });
-    if (!user) throw new NotFoundException(`User with email ${email} not found`);
-    return new UserResponseDto(user);
+    if (!user) {
+      throw new RpcException({
+        status: 'error',
+        message: `User with email ${email} not found`
+      });
+    }
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
@@ -72,17 +84,25 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new RpcException({
+        status: 'error',
+        message: `User with ID ${id} not found`
+      });
     }
 
     const updatedUser = await this.userRepository.save(user);
-    return new UserResponseDto(updatedUser);
+    return plainToInstance(UserResponseDto, updatedUser, {
+      excludeExtraneousValues: true,
+    });
   }
 
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new RpcException({
+        status: 'error',
+        message: `User with ID ${id} not found`
+      });
     }
     return { message: `User with ID ${id} has been removed` };
   }
