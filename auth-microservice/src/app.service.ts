@@ -21,7 +21,7 @@ export class AppService {
         {
           cmd: 'Users.FindByEmail',
         },
-        email,
+        { email },
       ),
     );
     if (!user || user.password !== password) {

@@ -20,13 +20,13 @@ export class UsersController {
   }
 
   @MessagePattern({cmd:USER_PATTERNS.FindOne})
-  async findOne(@Payload() id: number) {
-    return this.usersService.findOne(id);
+  async findOne(@Payload() payload: { id: number }) {
+    return this.usersService.findOne(payload.id);
   }
 
   @MessagePattern({cmd:USER_PATTERNS.FindByEmail})
-  async findByEmail(@Payload() email: string) {
-    return this.usersService.findByEmail(email);
+  async findByEmail(@Payload() payload: { email: string }) {
+    return this.usersService.findByEmail(payload.email);
   }
 
   @MessagePattern({cmd:USER_PATTERNS.Update})
@@ -35,7 +35,7 @@ export class UsersController {
   }
 
   @MessagePattern({cmd:USER_PATTERNS.Remove})
-  async remove(@Payload() id: number) {
-    return this.usersService.remove(id);
+  async remove(@Payload() payload: { id: number }) {
+    return this.usersService.remove(payload.id);
   }
 }
