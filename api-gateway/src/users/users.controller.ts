@@ -4,9 +4,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationParams } from './utils/types';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRole } from 'src/products/utils/types';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
+import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
@@ -16,11 +20,15 @@ export class UsersController {
   }
 
   @Get()
+  @Roles(UserRole.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   findAll(@Query() query: PaginationParams) {
     return this.usersService.findAll(query);
   }
 
   @Get(':id')
+  @Roles(UserRole.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, OwnerOrRolesGuard)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
@@ -31,11 +39,15 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @Roles(UserRole.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, OwnerOrRolesGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @Roles(UserRole.SUPER_ADMIN)
+  @UseGuards(JwtAuthGuard, SuperAdminGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }

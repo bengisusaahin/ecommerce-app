@@ -24,6 +24,11 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @MessagePattern({cmd:USER_PATTERNS.FindByEmail})
+  async findByEmail(@Payload() email: string) {
+    return this.usersService.findByEmail(email);
+  }
+
   @MessagePattern({cmd:USER_PATTERNS.Update})
   async update(@Payload() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto.id, updateUserDto);
