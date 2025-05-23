@@ -16,7 +16,7 @@ export class AppService {
   ) { }
 
   async validateUser(email: string, password: string) {
-    const user: UserDto = await firstValueFrom(
+    const plainUser: UserDto = await firstValueFrom(
       this.usersMicroservice.send(
         {
           cmd: 'Users.FindByEmail',
@@ -24,6 +24,9 @@ export class AppService {
         { email },
       ),
     );
+
+    const user = plainToInstance(UserDto, plainUser, { excludeExtraneousValues: true });
+
     if (!user || user.password !== password) {
       throw new RpcException({
         status: 'error',

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserDto, UserResponseDto } from './dto/user-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -63,7 +63,7 @@ export class UsersService {
     });
   }
 
-  async findByEmail(email: string): Promise<UserResponseDto> {
+  async findByEmail(email: string): Promise<UserDto> {
     const user = await this.userRepository.findOneBy({ email });
     if (!user) {
       throw new RpcException({
@@ -71,7 +71,7 @@ export class UsersService {
         message: `User with email ${email} not found`
       });
     }
-    return plainToInstance(UserResponseDto, user, {
+    return plainToInstance(UserDto, user, {
       excludeExtraneousValues: true,
     });
   }
