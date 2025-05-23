@@ -49,11 +49,12 @@ export class OrdersService implements OnModuleInit {
     const orderPayload = {
       orderId: order.id,
       userId: order.userId,
-      totalPrice: order.totalPrice,
+      createdAt: new Date().toISOString(),
       items: dto.orderItems.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
       })),
+      totalPrice: order.totalPrice,
     };
 
     this.kafkaClient.emit(ORDER_KAFKA_EVENTS.ORDER_CREATED, orderPayload);

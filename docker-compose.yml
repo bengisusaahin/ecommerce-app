@@ -130,6 +130,8 @@ services:
         container_name: notifications_microservice_container
         depends_on:
             - kafka
+        env_file:
+            - .env
         networks:
             - commerce-network 
         command: npm run start:dev 
