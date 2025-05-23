@@ -27,7 +27,7 @@ export class MailService {
     async sendOrderMail(event: OrderCreatedEvent) {
         const info = await this.transporter.sendMail({
             from: '"Acme Store" <no-reply@acme.com>',
-            to: 'customer@example.com', // test recipient
+            to: 'customer@example.com', 
             subject: `Your Order Has Been Received (#${event.orderId})`,
             text: `Hello! Your order has been successfully placed. Total: ${event.totalPrice} ₺ - Date: ${event.createdAt}`,
             html: `

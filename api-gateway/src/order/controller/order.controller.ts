@@ -14,8 +14,8 @@ export class OrderController {
     constructor(private readonly ordersService: OrderService) { }
 
     @Post()
-    //@UseGuards( RolesGuard)
-    //@Roles(UserRole.USER, UserRole.SELLER)
+    @UseGuards( RolesGuard)
+    @Roles(UserRole.USER, UserRole.SELLER)
     create(@Body() dto: CreateOrderDto) {
         return this.ordersService.create(dto);
     }
