@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,10 +7,11 @@ import { Repository } from 'typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { plainToInstance } from 'class-transformer';
 import { OrderResponseDto } from './dto/order-response.dto';
-import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
+import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, PaginatedResult, PaginationParams, SortOrder } from './utils/types';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
-export class OrdersService {
+export class OrdersService implements OnModuleInit {
 
   constructor(
     @InjectRepository(Order)
@@ -18,7 +19,13 @@ export class OrdersService {
 
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
+
+    @Inject(`${KAFKA_PATTERNS.name}`) private readonly kafkaClient: ClientKafka,
   ) { }
+
+  onModuleInit() {
+    this.kafkaClient.connect();
+  }
 
   async create(dto: CreateOrderDto): Promise<OrderResponseDto> {
     const order = this.orderRepository.create({
@@ -38,6 +45,18 @@ export class OrdersService {
     );
 
     const savedItems = await this.orderItemRepository.save(orderItems);
+
+    const orderPayload = {
+      orderId: order.id,
+      userId: order.userId,
+      totalPrice: order.totalPrice,
+      items: dto.orderItems.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    this.kafkaClient.emit(ORDER_KAFKA_EVENTS.ORDER_CREATED, orderPayload);
 
     return plainToInstance(
       OrderResponseDto,
