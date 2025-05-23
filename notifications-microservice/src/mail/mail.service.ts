@@ -18,16 +18,16 @@ export class MailService {
                 },
             });
 
-            console.log('📧 Ethereal test account ready');
-            console.log(`👤 Login: ${testAccount.user}`);
-            console.log(`🔐 Password: ${testAccount.pass}`);
+            console.log('Ethereal test account ready');
+            console.log(`Login: ${testAccount.user}`);
+            console.log(`Password: ${testAccount.pass}`);
         });
     }
 
     async sendOrderMail(event: OrderCreatedEvent) {
         const info = await this.transporter.sendMail({
             from: '"Acme Store" <no-reply@acme.com>',
-            to: 'customer@example.com', 
+            to: 'customer@example.com',
             subject: `Your Order Has Been Received (#${event.orderId})`,
             text: `Hello! Your order has been successfully placed. Total: ${event.totalPrice} ₺ - Date: ${event.createdAt}`,
             html: `

@@ -20,6 +20,6 @@ async function bootstrap() {
     },
   );
   await app.listen();
-  console.log('Stock microservice is listening to Kafka events...');
+  console.log('Notifications microservice is listening to Kafka events...');
 }
 bootstrap();

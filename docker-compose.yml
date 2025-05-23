@@ -54,6 +54,16 @@ services:
             - cart-mongo-data:/data/db  
         networks:
             - commerce-network  
+    
+    shipping-mongo-db:
+        image: mongo
+        container_name: shipping-mongo-db
+        ports:
+            - '27019:27017'
+        volumes:
+            - shipping-mongo-data:/data/db
+        networks:
+            - commerce-network   
 
     pgadmin:
         image: dpage/pgadmin4
@@ -162,6 +172,20 @@ services:
             - commerce-network
         command: npm run start:dev
 
+    shipping-microservice:
+        build:
+            context: ./shipping-microservice
+            dockerfile: Dockerfile
+        container_name: shipping_microservice_container
+        depends_on:
+            - kafka
+            - shipping-mongo-db
+        env_file:
+            - .env
+        networks:
+            - commerce-network
+        command: npm run start:dev
+
     users-microservice:
         build: 
             context: ./users-microservice
@@ -199,6 +223,7 @@ volumes:
     users-pg-data:
     products-pg-data:   
     orders-pg-data: 
+    shipping-mongo-data:
 
 networks:
     commerce-network:
