@@ -4,22 +4,31 @@ import { Order } from "./order.entity";
 
 @Entity('order_items')
 export class OrderItem extends BaseEntity {
+  //TODO
   @Column()
   orderId: number;
 
-  @Column()
+  @Column({ name: 'product_id', type: 'int' })
   productId: number;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 1 })
   quantity: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
-  @ManyToOne(() => Order, order => order.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Order, order => order.items, {
+    eager: true,
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'orderId' })
   order: Order;
+
+  constructor(dto: Partial<OrderItem>) {
+    super();
+    Object.assign(this, { ...dto });
+  }
 }

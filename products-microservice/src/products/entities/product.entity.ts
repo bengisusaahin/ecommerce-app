@@ -1,5 +1,6 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { ProductImage } from "./product-image.entity";
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -24,4 +25,9 @@ export class Product extends BaseEntity {
     @Column({ name: 'seller_id', type: 'int' })
     sellerId: number;
 
+    @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+        cascade: true,
+        eager: true,
+    })
+    images: ProductImage[];
 }

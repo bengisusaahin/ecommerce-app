@@ -4,10 +4,10 @@ import { OrderItem } from "./order-item.entity";
 
 @Entity('orders')
 export class Order extends BaseEntity {
-    @Column()
+    @Column({ name: 'user_id' , type: 'int' })
     userId: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
     totalPrice: number;
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
@@ -15,4 +15,8 @@ export class Order extends BaseEntity {
     })
     items: OrderItem[];
 
+    constructor(dto: Partial<Order>) {
+        super();
+        Object.assign(this, { ...dto });
+    }
 }
