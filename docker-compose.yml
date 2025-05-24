@@ -93,7 +93,7 @@ services:
             - commerce-network
     kafka:
         image: confluentinc/cp-kafka:7.5.0
-        container_name: kafka_container
+        container_name: kafka
         depends_on:
             - zookeeper
         ports:
