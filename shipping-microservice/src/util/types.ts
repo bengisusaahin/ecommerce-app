@@ -5,6 +5,6 @@ export const KAFKA_PATTERNS = {
 }
 
 export const SHIPPING_PATTERNS = {
-  SHIPPING_CREATED: 'Order.Created',
-  
+  ORDER_CREATED: 'Order.Created',
+  ORDER_SHIPPING_CREATED: 'Order.Shipping.Created'
 };

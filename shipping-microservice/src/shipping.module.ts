@@ -4,6 +4,8 @@ import { ShippingController } from './shipping.controller';
 import { ShippingService } from './shipping.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Shipping, ShippingSchema } from './schema/shipping.schema';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { KAFKA_PATTERNS } from './util/types';
 
 @Module({
   imports: [
@@ -18,6 +20,22 @@ import { Shipping, ShippingSchema } from './schema/shipping.schema';
       }),
     }),
     MongooseModule.forFeature([{ name: Shipping.name, schema: ShippingSchema }]),
+
+    ClientsModule.register([
+      {
+        name: KAFKA_PATTERNS.name,
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'shipping',
+            brokers: [`${KAFKA_PATTERNS.host}:${KAFKA_PATTERNS.port}`],
+          },
+          consumer: {
+            groupId: 'shipping-consumer',
+          },
+        },
+      },
+    ]),
   ],
   controllers: [ShippingController],
   providers: [ShippingService],

@@ -19,6 +19,12 @@ export class Shipping {
 
     @Prop({ type: [{ productId: Number, quantity: Number }] })
     items: { productId: number; quantity: number }[];
+
+    @Prop({ required: true })
+    trackingNumber: string;
+
+    @Prop({ required: true })
+    estimatedDeliveryDate: Date;
 }
 
 export const ShippingSchema = SchemaFactory.createForClass(Shipping);

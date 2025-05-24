@@ -8,7 +8,7 @@ import { OrderCreatedEvent } from './events/order-created.event';
 export class ShippingController {
   constructor(private readonly shippingService: ShippingService) {}
 
-  @EventPattern(SHIPPING_PATTERNS.SHIPPING_CREATED)
+  @EventPattern(SHIPPING_PATTERNS.ORDER_CREATED)
   async orderCreatedEventHandler(@Payload() orderCreatedEvent: OrderCreatedEvent) {
     await this.shippingService.orderCreatedEventHandler(orderCreatedEvent);
   }
