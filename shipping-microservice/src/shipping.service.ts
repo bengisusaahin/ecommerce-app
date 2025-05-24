@@ -19,7 +19,7 @@ export class ShippingService implements OnModuleInit {
     this.kafkaClient.connect();
   }
 
-  async orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent) {
+  async orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent): Promise<void> {
     const shipping = new this.shippingModel({
       orderId: orderCreatedEvent.orderId,
       status: ShippingStatus.PENDING,
