@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,9 +7,12 @@ import { Repository } from 'typeorm';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { ProductImage } from './entities/product-image.entity';
 import { plainToInstance } from 'class-transformer';
+import { StockUpdateResponseDto } from './dto/stock-update-response.dto';
 
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger(ProductsService.name);
+
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -33,6 +36,24 @@ export class ProductsService {
       ...savedProduct,
       images: savedImages,
     }, { excludeExtraneousValues: true });
+  }
+
+  async decreaseStock(productId: number, quantity: number): Promise<StockUpdateResponseDto> {
+    const product = await this.productRepository.findOne({ where: { id: productId } });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${productId} not found`);
+    }
+
+    if (product.stock < quantity) {
+      this.logger.warn(`Insufficient stock for product ${productId}`);
+      return StockUpdateResponseDto.warning(product.stock);
+    }
+
+    await this.productRepository.decrement({ id: productId }, 'stock', quantity);
+
+    this.logger.log(`Stock updated: product ${productId} - ${quantity}`);
+    return StockUpdateResponseDto.success();
   }
 
   async findAll(): Promise<ProductResponseDto[]> {

@@ -3,6 +3,7 @@ export const PRODUCT_PATTERNS = {
   FindBySeller: 'Products.FindBySeller',
   FindOne: 'Products.FindOne',
   Create: 'Products.Create',
+  DecreaseStock: 'Products.DecreaseStock',
   Update: 'Products.Update',
   Remove: 'Products.Remove',
 };

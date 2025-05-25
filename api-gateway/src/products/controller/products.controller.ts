@@ -14,7 +14,7 @@ export class ProductsController {
         private readonly productsService: ProductsService
     ) { }
 
-    @Post('addProduct')
+    @Post()
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN, UserRole.SELLER)
     create(@Body(CapitalizeNamePipe) dto: CreateProductDto) {

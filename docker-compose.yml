@@ -186,6 +186,23 @@ services:
             - commerce-network
         command: npm run start:dev
 
+    # Kafka Consumer: Listens to 'order_created' events
+    # Kafka Producer: Emits 'stock_warning' and 'stock_error' events
+    # TCP Client: Sends 'Products.DecreaseStock' command to products-microservice
+    stock-microservice:
+        build:
+            context: ./stock-microservice
+            dockerfile: Dockerfile
+        container_name: stock_microservice_container
+        depends_on:
+            - kafka
+            - products-pg-db
+        env_file:
+            - .env
+        networks:
+            - commerce-network
+        command: npm run start:dev
+
     users-microservice:
         build: 
             context: ./users-microservice

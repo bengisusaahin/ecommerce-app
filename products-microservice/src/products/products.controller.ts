@@ -14,6 +14,11 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.DecreaseStock })
+  decreaseStock(@Payload() items: { productId: number; quantity: number }) {
+    return this.productsService.decreaseStock(items.productId, items.quantity);
+  }
+
   @MessagePattern({ cmd: PRODUCT_PATTERNS.FindAll })
   findAll() {
     return this.productsService.findAll();
