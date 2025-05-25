@@ -8,7 +8,7 @@ export const ORDER_PATTERNS = {
 };
 
 export const KAFKA_PATTERNS = {
-  name: 'KAFKA_MICROSERVICE',
+  name: 'KAFKA_PRODUCER',
   host: 'kafka',
   port: 9092,
 }
