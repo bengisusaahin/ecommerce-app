@@ -21,7 +21,7 @@ export class OwnerOrRolesGuard implements CanActivate {
         );
 
         const isRoleAllowed = user.role && allowedRoles?.includes(user.role);
-        const isOwner = user.id === paramId;
+        const isOwner = user.sub === paramId;
 
         if (isOwner || isRoleAllowed) {
             return true;

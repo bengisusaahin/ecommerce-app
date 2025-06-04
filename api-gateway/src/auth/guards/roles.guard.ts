@@ -1,9 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
-import { Request } from 'express';
 import { UserRole } from '@ecommerce/types';
-import { User } from 'src/users/entities/user.entity';
+import { RequestWithUser } from '../controller/interfaces/request-with-user.interface';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -17,7 +16,7 @@ export class RolesGuard implements CanActivate {
 
         if (!requiredRoles) return true;
 
-        const { user } = context.switchToHttp().getRequest<Request & { user: User }>();
+        const { user } = context.switchToHttp().getRequest<RequestWithUser>();
 
         if (!requiredRoles.includes(user.role)) {
             throw new ForbiddenException('Bu işlem için yetkiniz bulunmamaktadır.');
