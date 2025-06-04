@@ -4,12 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/entities/product.entity';
 import { ProductImage } from './products/entities/product-image.entity';
+import { join } from 'path';
 
 @Module({
   imports: [
     ProductsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(__dirname, '..', '..', '.env'),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

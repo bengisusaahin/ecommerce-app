@@ -4,12 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { join } from 'path';
 
 @Module({
   imports: [
     OrdersModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(__dirname, '..', '..', '.env'),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
