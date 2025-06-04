@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { UserRole } from '../utils/types';
+import { UserRole } from '../../enums/user-role.enum';
 
 export class UserResponseDto {
   @Expose()

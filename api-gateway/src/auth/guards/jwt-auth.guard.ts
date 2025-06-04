@@ -1,7 +1,7 @@
 import { Injectable, ExecutionContext, UnauthorizedException, CanActivate, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { AUTH_PATTERNS } from '../utils/types';
+import { AUTH_PATTERNS } from '@ecommerce/types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

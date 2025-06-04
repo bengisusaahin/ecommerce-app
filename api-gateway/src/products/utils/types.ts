@@ -41,4 +41,6 @@ export interface PaginationParams {
   search?: string;
 }
 
+//TODO searcable pagination params
+
 export type SortOrder = "ASC" | "DESC";
