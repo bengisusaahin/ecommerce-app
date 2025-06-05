@@ -12,7 +12,7 @@ export class ShippingService implements OnModuleInit {
     private shippingModel: Model<ShippingDocument>,
     @Inject(KAFKA_PATTERNS.name)
     private readonly kafkaClient: ClientKafka,
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.kafkaClient.connect();
@@ -23,8 +23,8 @@ export class ShippingService implements OnModuleInit {
       orderId: orderCreatedEvent.orderId,
       status: ShippingStatus.PENDING,
       items: orderCreatedEvent.items,
-      trackingNumber: `TRK-${Date.now()}`, 
-      estimatedDeliveryDate: new Date(Date.now()+ 7 * 24 * 60 * 60 * 1000), 
+      trackingNumber: `TRK-${Date.now()}`,
+      estimatedDeliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     const savedShipping = await shipping.save();

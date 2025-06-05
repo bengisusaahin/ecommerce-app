@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { StockController } from './stock.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from './util/types';
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 

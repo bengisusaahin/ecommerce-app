@@ -30,7 +30,7 @@ import { join } from 'path';
         useFactory: (config: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: config.get('USERS_MICROSERVICE_HOST'), 
+            host: config.get('USERS_MICROSERVICE_HOST'),
             port: config.get<number>('USERS_MICROSERVICE_PORT'),
           },
         }),
@@ -40,4 +40,4 @@ import { join } from 'path';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

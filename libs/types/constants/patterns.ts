@@ -31,17 +31,22 @@ export const PRODUCT_PATTERNS = {
 };
 
 export const SHIPPING_PATTERNS = {
-  ORDER_CREATED: 'Order.Created',
   ORDER_SHIPPING_CREATED: 'Order.Shipping.Created'
 };
 
+export const STOCK_PATTERNS = {
+  ORDER_STOCK_CREATED: 'Order.Stock.Created',
+  STOCK_WARNING: 'Stock.Warning',
+  STOCK_ERROR: 'Stock.Error'
+};
+
 export const USER_PATTERNS = {
-    FindAll: 'Users.FindAll',
-    FindOne: 'Users.FindOne',
-    FindByEmail: 'Users.FindByEmail',
-    Create: 'Users.Create',
-    Update: 'Users.Update',
-    Remove: 'Users.Remove',
+  FindAll: 'Users.FindAll',
+  FindOne: 'Users.FindOne',
+  FindByEmail: 'Users.FindByEmail',
+  Create: 'Users.Create',
+  Update: 'Users.Update',
+  Remove: 'Users.Remove',
 };
 
 export const KAFKA_PATTERNS = {
@@ -49,7 +54,6 @@ export const KAFKA_PATTERNS = {
   host: 'kafka',
   port: 9092,
 }
-
 
 export const ORDER_KAFKA_EVENTS = {
   ORDER_CREATED: 'Order.Created',
