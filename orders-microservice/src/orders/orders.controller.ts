@@ -1,9 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { ORDER_PATTERNS } from './utils/types';
+import { CreateOrderDto, ORDER_PATTERNS } from '@ecommerce/types';
 
 @Controller()
 export class OrdersController {

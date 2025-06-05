@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { BaseEntity } from "./base.entity";
+import { BaseEntity } from '@ecommerce/types';
 import { Order } from "./order.entity";
 
 @Entity('order_items')
@@ -24,7 +24,7 @@ export class OrderItem extends BaseEntity {
     eager: true,
     onDelete: 'CASCADE'
   })
-  @JoinColumn({ name: 'orderId' })
+  @JoinColumn({ name: 'order_id' })
   order: Order;
 
   constructor(dto: Partial<OrderItem>) {

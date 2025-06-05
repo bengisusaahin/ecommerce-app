@@ -1,6 +1,6 @@
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Kafka } from 'kafkajs';
-import { KAFKA_PATTERNS } from './utils/types';
 
 @Injectable()
 export class OrderKafkaProducerService implements OnModuleInit {

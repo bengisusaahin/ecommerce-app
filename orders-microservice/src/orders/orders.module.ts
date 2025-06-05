@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from './utils/types';
 import { OrderKafkaProducerService } from './order-kafka-producer.service';
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 
 @Module({
   imports: [
