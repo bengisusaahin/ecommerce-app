@@ -3,6 +3,14 @@ export const AUTH_PATTERNS = {
   Verify: 'Auth.Verify',
 };
 
+export const CART_PATTERNS = {
+  GetCart: 'cart.getCart',
+  AddToCart: 'cart.addToCart',
+  UpdateCart: 'cart.updateCart',
+  RemoveItem: 'cart.removeItem',
+  ClearCart: 'cart.clearCart',
+};
+
 export const USER_PATTERNS = {
     FindAll: 'Users.FindAll',
     FindOne: 'Users.FindOne',

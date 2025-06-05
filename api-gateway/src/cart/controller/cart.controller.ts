@@ -1,8 +1,7 @@
 import { Controller, Post, Get, Delete, Body, Param, UseGuards, Request, Put, UsePipes, ValidationPipe, Req, Query } from '@nestjs/common';
 import { CartService } from '../service/cart.service';
-import { AddToCartDto } from '../dto/add-to-cart.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { UpdateCartDto } from '../dto/update-cart.dto';
+import { CreateCartDto, UpdateCartDto } from '@ecommerce/types';
 
 @Controller('cart')
 @UseGuards(JwtAuthGuard)
@@ -11,7 +10,7 @@ export class CartController {
 
   @Post('add')
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  addToCart(@Body() dto: AddToCartDto, @Req() req) {
+  addToCart(@Body() dto: CreateCartDto, @Req() req) {
     dto.userId = req.user.sub;
     return this.cartService.addToCart(dto);
   }
