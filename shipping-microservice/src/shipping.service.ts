@@ -1,10 +1,9 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { OrderCreatedEvent } from './events/order-created.event';
 import { Shipping, ShippingDocument, ShippingStatus } from './schema/shipping.schema';
 import { ClientKafka } from '@nestjs/microservices';
-import { KAFKA_PATTERNS, SHIPPING_PATTERNS } from './util/types';
+import { KAFKA_PATTERNS, OrderCreatedEvent, SHIPPING_PATTERNS } from '@ecommerce/types';
 
 @Injectable()
 export class ShippingService implements OnModuleInit {

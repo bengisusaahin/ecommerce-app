@@ -30,6 +30,11 @@ export const PRODUCT_PATTERNS = {
   Remove: 'Products.Remove',
 };
 
+export const SHIPPING_PATTERNS = {
+  ORDER_CREATED: 'Order.Created',
+  ORDER_SHIPPING_CREATED: 'Order.Shipping.Created'
+};
+
 export const USER_PATTERNS = {
     FindAll: 'Users.FindAll',
     FindOne: 'Users.FindOne',

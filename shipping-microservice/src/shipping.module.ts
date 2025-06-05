@@ -5,8 +5,8 @@ import { ShippingService } from './shipping.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Shipping, ShippingSchema } from './schema/shipping.schema';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from './util/types';
 import { join } from 'path';
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 
 @Module({
   imports: [

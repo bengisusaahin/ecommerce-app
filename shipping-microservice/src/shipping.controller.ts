@@ -1,8 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ShippingService } from './shipping.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { SHIPPING_PATTERNS } from './util/types';
-import { OrderCreatedEvent } from './events/order-created.event';
+import { OrderCreatedEvent, SHIPPING_PATTERNS } from '@ecommerce/types';
 
 @Controller()
 export class ShippingController {
