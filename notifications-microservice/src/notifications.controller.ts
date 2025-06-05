@@ -1,14 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { OrderCreatedEvent } from './events/order-created.event';
-import { NOTIFICATION_PATTERNS } from './utils/types';
+import { ORDER_KAFKA_EVENTS, OrderCreatedEvent } from '@ecommerce/types';
 
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @EventPattern(NOTIFICATION_PATTERNS.NOTIFICATION_CREATED)
+  @EventPattern(ORDER_KAFKA_EVENTS.ORDER_CREATED)
   async orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent) {
     await this.notificationsService.orderCreatedEventHandler(orderCreatedEvent);
   }

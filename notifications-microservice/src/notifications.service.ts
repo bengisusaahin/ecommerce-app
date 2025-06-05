@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { OrderCreatedEvent } from './events/order-created.event';
 import { MailService } from './mail/mail.service';
+import { OrderCreatedEvent } from '@ecommerce/types';
 
 @Injectable()
 export class NotificationsService {

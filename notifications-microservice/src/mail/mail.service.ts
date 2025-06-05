@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { OrderCreatedEvent } from '../events/order-created.event';
+import { OrderCreatedEvent } from '@ecommerce/types';
 
 @Injectable()
 export class MailService {
