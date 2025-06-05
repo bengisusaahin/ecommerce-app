@@ -5,6 +5,10 @@ export interface PaginationParams {
   order?: SortOrder
 }
 
+export interface SearchablePaginationParams extends PaginationParams {
+  search?: string;
+}
+
 export type SortOrder = "ASC" | "DESC";
 
 export interface PaginatedResult<T> {

@@ -4,9 +4,7 @@ import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { PaginationParams, UserRole } from '../utils/types';
-import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { CreateProductDto, SearchablePaginationParams, UpdateProductDto, UserRole } from '@ecommerce/types';
 
 @Controller('products')
 export class ProductsController {
@@ -22,7 +20,7 @@ export class ProductsController {
     }
 
     @Get()
-    findAll(@Query() query: PaginationParams) {
+    findAll(@Query() query: SearchablePaginationParams) {
         return this.productsService.findAll(query);
     }
 

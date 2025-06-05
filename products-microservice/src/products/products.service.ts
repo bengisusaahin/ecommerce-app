@@ -1,13 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { ProductResponseDto } from './dto/product-response.dto';
 import { ProductImage } from './entities/product-image.entity';
 import { plainToInstance } from 'class-transformer';
-import { StockUpdateResponseDto } from './dto/stock-update-response.dto';
+import { CreateProductDto, ProductResponseDto, StockUpdateResponseDto, UpdateProductDto } from '@ecommerce/types';
 
 @Injectable()
 export class ProductsService {

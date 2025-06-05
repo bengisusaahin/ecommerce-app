@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { PaginationParams, PRODUCT_PATTERNS } from '../utils/types';
-import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { CreateProductDto, PRODUCT_PATTERNS, SearchablePaginationParams, UpdateProductDto } from '@ecommerce/types';
 
 @Injectable()
 export class ProductsService {
@@ -18,7 +16,7 @@ export class ProductsService {
         );
     }
 
-    findAll(pagination: PaginationParams) {
+    findAll(pagination: SearchablePaginationParams) {
         return this.productsMicroservice.send(
             { cmd: PRODUCT_PATTERNS.FindAll },
             pagination,

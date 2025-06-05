@@ -20,6 +20,16 @@ export const ORDER_PATTERNS = {
   Remove: 'Orders.Remove',
 };
 
+export const PRODUCT_PATTERNS = {
+  FindAll: 'Products.FindAll',
+  FindBySeller: 'Products.FindBySeller',
+  FindOne: 'Products.FindOne',
+  Create: 'Products.Create',
+  DecreaseStock: 'Products.DecreaseStock',
+  Update: 'Products.Update',
+  Remove: 'Products.Remove',
+};
+
 export const USER_PATTERNS = {
     FindAll: 'Users.FindAll',
     FindOne: 'Users.FindOne',

@@ -1,9 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { PRODUCT_PATTERNS } from 'src/utils/types';
+import { CreateProductDto, PRODUCT_PATTERNS, UpdateProductDto } from '@ecommerce/types';
 
 @Controller()
 export class ProductsController {
