@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationParams, USER_PATTERNS } from './utils/types';
+import { CreateUserDto } from '@ecommerce/types';
+import { UpdateUserDto } from '@ecommerce/types';
+import { PaginationParams, USER_PATTERNS } from '@ecommerce/types';
 
 @Controller()
 export class UsersController {

@@ -109,129 +109,191 @@ services:
 
     auth-microservice:
         build: 
-            context: ./auth-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./auth-microservice/Dockerfile
         container_name: auth_microservice_container
         depends_on:
             - users-microservice
+            - ms-libs
         env_file:
             - .env
+        volumes:
+            - ./auth-microservice:/usr/src/app/auth-microservice
+            - /usr/src/app/auth-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
 
     cart-microservice:
         build:
-            context: ./cart-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./cart-microservice/Dockerfile
         container_name: cart_microservice_container
         depends_on:
             - cart-mongo-db
+            - ms-libs
         env_file:
             - .env
+        volumes:
+            - ./cart-microservice:/usr/src/app/cart-microservice
+            - /usr/src/app/cart-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network  
-        command: npm run start:dev
 
     notifications-microservice:
         build:
-            context: ./notifications-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./notifications-microservice/Dockerfile
         container_name: notifications_microservice_container
         depends_on:
             - kafka
         env_file:
             - .env
+        volumes:
+            - ./notifications-microservice:/usr/src/app/notifications-microservice
+            - /usr/src/app/notifications-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network 
-        command: npm run start:dev 
 
     products-microservice:
         build: 
-            context: ./products-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./products-microservice/Dockerfile
         container_name: products_microservice_container
         depends_on:
             - products-pg-db
+            - ms-libs
         env_file:
             - .env
+        volumes:
+            - ./products-microservice:/usr/src/app/products-microservice
+            - /usr/src/app/products-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
 
     orders-microservice:
         build:
-            context: ./orders-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./orders-microservice/Dockerfile
         container_name: orders_microservice_container
         depends_on:
             - orders-pg-db
+            - ms-libs
         env_file:
             - .env
+        volumes:
+            - ./orders-microservice:/usr/src/app/orders-microservice
+            - /usr/src/app/orders-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
 
     shipping-microservice:
         build:
-            context: ./shipping-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./shipping-microservice/Dockerfile
         container_name: shipping_microservice_container
         depends_on:
             - kafka
             - shipping-mongo-db
         env_file:
             - .env
+        volumes:
+            - ./shipping-microservice:/usr/src/app/shipping-microservice
+            - /usr/src/app/shipping-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
 
     # Kafka Consumer: Listens to 'order_created' events
     # Kafka Producer: Emits 'stock_warning' and 'stock_error' events
     # TCP Client: Sends 'Products.DecreaseStock' command to products-microservice
     stock-microservice:
         build:
-            context: ./stock-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./stock-microservice/Dockerfile
         container_name: stock_microservice_container
         depends_on:
             - kafka
             - products-pg-db
         env_file:
             - .env
+        volumes:
+            - ./stock-microservice:/usr/src/app/stock-microservice
+            - /usr/src/app/stock-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
 
     users-microservice:
         build: 
-            context: ./users-microservice
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./users-microservice/Dockerfile
         container_name: users_microservice_container
         depends_on:
             - users-pg-db
+            - ms-libs
         env_file:
             - .env
+        volumes:
+            - ./users-microservice:/usr/src/app/users-microservice
+            - /usr/src/app/users-microservice/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
-        command: npm run start:dev
         
     api-gateway:
         build: 
-            context: ./api-gateway
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./api-gateway/Dockerfile
         container_name: api_gateway_container
         depends_on:
             - auth-microservice
             - products-microservice
+            - orders-microservice
+            - cart-microservice
+            - ms-libs
+            - shipping-microservice
             - users-microservice
         env_file:
             - .env
+        volumes:
+            - ./api-gateway:/usr/src/app/api-gateway
+            - /usr/src/app/api-gateway/node_modules
+            - ms-libs-dist:/usr/src/app/libs/dist
+            - ms-libs-modules:/usr/src/app/libs/node_modules
+        restart: unless-stopped
         networks:
             - commerce-network
         ports:
             - '3000:3000'
-        command: npm run start:dev
+
+    ms-libs:
+        build:
+            context: ./libs
+            dockerfile: Dockerfile
+        volumes:
+            - ms-libs-dist:/usr/src/app/dist 
+            - ms-libs-modules:/usr/src/app/node_modules
 
 volumes:
     pgadmin_data:
@@ -241,6 +303,8 @@ volumes:
     products-pg-data:   
     orders-pg-data: 
     shipping-mongo-data:
+    ms-libs-dist:
+    ms-libs-modules:
 
 networks:
     commerce-network:

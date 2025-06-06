@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { RequestWithUser } from '../controller/interfaces/request-with-user.interface';
-import { UserRole } from 'src/products/utils/types';
+import { UserRole } from '@ecommerce/types';
 
 @Injectable()
 export class OwnerOrRolesGuard implements CanActivate {
@@ -21,7 +21,7 @@ export class OwnerOrRolesGuard implements CanActivate {
         );
 
         const isRoleAllowed = user.role && allowedRoles?.includes(user.role);
-        const isOwner = user.id === paramId;
+        const isOwner = user.sub === paramId;
 
         if (isOwner || isRoleAllowed) {
             return true;

@@ -1,12 +1,9 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { OrderService } from '../service/order.service';
-import { CreateOrderDto } from '../dto/create-order.dto';
-import { UpdateOrderDto } from '../dto/update-order.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { PaginationParams } from 'src/users/utils/types';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UserRole } from 'src/products/utils/types';
+import { CreateOrderDto, PaginationParams, UpdateOrderDto, UserRole } from '@ecommerce/types';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard)

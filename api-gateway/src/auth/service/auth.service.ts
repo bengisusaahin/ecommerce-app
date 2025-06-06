@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LoginDto } from '../dto/login.dto';
+import { LoginDto } from '@ecommerce/types';
 import { firstValueFrom } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_PATTERNS } from '../utils/types';
+import { AUTH_PATTERNS } from '@ecommerce/types';
 
 @Injectable()
 export class AuthService {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
-import { UserDto, UserResponseDto } from './dto/user-response.dto';
+import { CreateUserDto } from '@ecommerce/types';
+import { UpdateUserDto } from '@ecommerce/types';
+import { PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
+import { UserDto, UserResponseDto } from '@ecommerce/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';

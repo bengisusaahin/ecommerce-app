@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { StockModule } from './stock.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from './util/types';
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(

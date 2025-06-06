@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { JwtPayload } from './utils/types';
-import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from '@ecommerce/types';
+import { LoginDto } from '../../libs/types/dto/auth/login.dto';
 import { firstValueFrom } from 'rxjs';
-import { UserDto } from './dto/user-response.dto';
+import { UserDto } from '../../libs/types/dto/auth/user-response.dto';
 import { plainToInstance } from 'class-transformer';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserResponseDto } from '../../libs/types/dto/auth/user-response.dto';
 
 @Injectable()
 export class AppService {

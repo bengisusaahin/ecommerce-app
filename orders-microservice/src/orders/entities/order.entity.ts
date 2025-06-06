@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity } from "./base.entity";
+import { BaseEntity } from '@ecommerce/types';
 import { OrderItem } from "./order-item.entity";
 
 @Entity('orders')

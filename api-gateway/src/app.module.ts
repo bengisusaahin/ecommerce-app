@@ -6,12 +6,13 @@ import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(__dirname, '..', '..', '.env'),
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

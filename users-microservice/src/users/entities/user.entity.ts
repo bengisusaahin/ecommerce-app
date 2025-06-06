@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { BaseEntity } from './base.entity';
-import { UserRole } from '../utils/types';
+import { BaseEntity } from '@ecommerce/types';
+import { UserRole } from '@ecommerce/types';
 
 @Entity('users')
 export class User extends BaseEntity {

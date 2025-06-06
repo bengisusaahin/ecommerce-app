@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: join(__dirname, '..', '..', '.env'),
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -28,7 +30,7 @@ import { JwtModule } from '@nestjs/jwt';
         useFactory: (config: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: config.get('USERS_MICROSERVICE_HOST'), 
+            host: config.get('USERS_MICROSERVICE_HOST'),
             port: config.get<number>('USERS_MICROSERVICE_PORT'),
           },
         }),
@@ -38,4 +40,4 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

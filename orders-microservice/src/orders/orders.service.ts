@@ -1,14 +1,12 @@
 import { Inject, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { plainToInstance } from 'class-transformer';
-import { OrderResponseDto } from './dto/order-response.dto';
-import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, PaginatedResult, PaginationParams, SortOrder } from './utils/types';
+import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
 import { ClientKafka } from '@nestjs/microservices';
+import { CreateOrderDto, OrderResponseDto, UpdateOrderDto } from '@ecommerce/types';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
