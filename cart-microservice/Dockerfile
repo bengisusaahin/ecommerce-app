@@ -1,13 +1,10 @@
-FROM node:22.14-alpine3.20
-
-WORKDIR /usr/src/app
-
-COPY ./libs ./libs
-
-COPY ./cart-microservice ./cart-microservice
+FROM node:20-alpine
 
 WORKDIR /usr/src/app/cart-microservice
+COPY ./cart-microservice/package*.json ./
 
 RUN npm install
+
+COPY ./cart-microservice ./
 
 CMD ["npm", "run", "start:dev"]

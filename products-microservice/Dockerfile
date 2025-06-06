@@ -1,13 +1,10 @@
-FROM node:22.14-alpine3.20
-
-WORKDIR /usr/src/app
-
-COPY ./libs ./libs
-
-COPY ./products-microservice ./products-microservice
+FROM node:20-alpine
 
 WORKDIR /usr/src/app/products-microservice
+COPY ./products-microservice/package*.json ./
 
 RUN npm install
+
+COPY ./products-microservice ./
 
 CMD ["npm", "run", "start:dev"]

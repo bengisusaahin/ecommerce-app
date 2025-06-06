@@ -11,9 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@ecommerce/types": [
-        "../libs/types"
-      ]
+      "@ecommerce/types": ["../libs/dist"]
     },
     "incremental": true,
     "skipLibCheck": true,

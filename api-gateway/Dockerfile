@@ -1,14 +1,11 @@
-FROM node:22.14-alpine3.20
-
-WORKDIR /usr/src/app
-
-COPY ./libs ./libs
-
-COPY ./api-gateway ./api-gateway
+FROM node:20-alpine
 
 WORKDIR /usr/src/app/api-gateway
+COPY ./api-gateway/package*.json ./
 
 RUN npm install
+
+COPY ./api-gateway ./
 
 CMD ["npm", "run", "start:dev"]
 

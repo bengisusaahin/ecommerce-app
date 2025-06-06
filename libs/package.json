@@ -3,12 +3,21 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Shared types and interfaces for the ecommerce microservices architecture",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "version:patch": "standard-version --release-as patch -m \"common patch %s\"",
+    "update": "npm run build && npm run version:patch && npm run postversion",
+    "postversion": "npm run build && node ./scripts/update-dependents.js"
   },
   "dependencies": {
     "@nestjs/mapped-types": "^2.1.0",
