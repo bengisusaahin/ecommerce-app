@@ -36,3 +36,6 @@ docker-compose.yml
 test
 tests
 __tests__
+
+# TypeScript incremental build info
+tsconfig.tsbuildinfo
