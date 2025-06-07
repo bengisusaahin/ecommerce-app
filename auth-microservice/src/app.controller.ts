@@ -1,8 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { LoginDto } from '../../libs/types/dto/auth/login.dto';
-import { AUTH_PATTERNS } from '@ecommerce/types';;
+import { AUTH_PATTERNS, LoginDto } from '@ecommerce/types';;
 
 @Controller()
 export class AppController {

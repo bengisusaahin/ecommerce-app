@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { NotificationsModule } from './notifications.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from './utils/types';
+import { KAFKA_PATTERNS } from '@ecommerce/types';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
