@@ -274,6 +274,7 @@ services:
             - ms-libs
             - shipping-microservice
             - users-microservice
+            - redis
         env_file:
             - .env
         volumes:
@@ -294,6 +295,14 @@ services:
         volumes:
             - ms-libs-dist:/usr/src/app/dist 
             - ms-libs-modules:/usr/src/app/node_modules
+
+    redis:
+        image: redis:6.2-alpine
+        container_name: redis
+        ports:
+            - '6379:6379'
+        networks:
+            - commerce-network
 
 volumes:
     pgadmin_data:

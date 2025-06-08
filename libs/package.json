@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
-    "standard-version": "^9.5.0",
     "typescript": "^5.8.3"
   }
 }

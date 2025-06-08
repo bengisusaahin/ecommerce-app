@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductsService } from '../service/products.service';
 import { CapitalizeNamePipe } from 'src/common/pipes/capitalize-name.pipe';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CreateProductDto, SearchablePaginationParams, UpdateProductDto, UserRole } from '@ecommerce/types';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('products')
+@UseInterceptors(CacheInterceptor)
 export class ProductsController {
     constructor(
         private readonly productsService: ProductsService
@@ -21,6 +23,7 @@ export class ProductsController {
 
     @Get()
     findAll(@Query() query: SearchablePaginationParams) {
+        console.log("Products Findall DB den geldi");
         return this.productsService.findAll(query);
     }
 
@@ -28,7 +31,6 @@ export class ProductsController {
     findBySeller(@Param('sellerId') sellerId: number) {
         return this.productsService.findBySeller(sellerId);
     }
-
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)

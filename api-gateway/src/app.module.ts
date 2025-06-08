@@ -7,6 +7,8 @@ import { CartModule } from './cart/cart.module';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { join } from 'path';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -28,7 +30,15 @@ import { join } from 'path';
     ProductsModule,
     OrderModule,
     CartModule,
+    CacheModule.register({
+      store: redisStore,
+      host: 'redis', 
+      port: 6379,
+      ttl: 600000, 
+      max: 100, 
+      isGlobal: true, 
+    }),
   ]
 })
-export class AppModule {}
+export class AppModule { }
 
