@@ -34,10 +34,10 @@ export class OrdersService implements OnModuleInit {
 
     const orderItems = dto.orderItems.map((item) =>
       this.orderItemRepository.create({
-        orderId: savedOrder.id,
+        order: savedOrder,
         productId: item.productId,
         quantity: item.quantity,
-        price: item.unitPrice,
+        unitPrice: item.unitPrice,
         totalPrice: item.totalPrice,
       }),
     );
@@ -119,7 +119,7 @@ export class OrdersService implements OnModuleInit {
           order,
           productId: item.productId,
           quantity: item.quantity,
-          price: item.unitPrice,
+          unitPrice: item.unitPrice,
           totalPrice: item.totalPrice,
         }),
       );
