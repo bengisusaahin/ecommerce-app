@@ -24,6 +24,7 @@ export * from './types/dto/users/update-user.dto';
 
 // entities
 export * from './types/entities/base.entity';
+export * from './types/entities/base-entity-with-name';
 
 // enums
 export * from './types/enums/user-role.enum';

@@ -1,12 +1,9 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { BaseEntity } from '@ecommerce/types';
+import { BaseEntityWithName } from '@ecommerce/types';
 import { UserRole } from '@ecommerce/types';
 
 @Entity('users')
-export class User extends BaseEntity {
-    @Column({ type: 'varchar', length: 100, unique: false })
-    name: string;
-
+export class User extends BaseEntityWithName {
     @Column({ type: 'varchar', length: 100, unique: true })
     email: string;
 

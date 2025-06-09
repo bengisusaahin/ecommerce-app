@@ -1,12 +1,9 @@
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity } from '@ecommerce/types';
+import { BaseEntityWithName } from '@ecommerce/types';
 import { ProductImage } from "./product-image.entity";
 
 @Entity('products')
-export class Product extends BaseEntity {
-    @Column({ type: 'varchar', length: 100, unique: false })
-    name: string;
-
+export class Product extends BaseEntityWithName {
     @Column({ type: 'varchar', length: 200, unique: true })
     description: string;
 
