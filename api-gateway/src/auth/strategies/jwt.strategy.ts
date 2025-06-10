@@ -10,7 +10,7 @@ import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject('USER_MICROSERVICE') private readonly userClient: ClientProxy,
+    @Inject('USERS_MICROSERVICE') private readonly userClient: ClientProxy,
     configService: ConfigService,
   ) {
     super({
@@ -22,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload) {
     const user = await firstValueFrom(
-      this.userClient.send({ cmd: USER_PATTERNS.FindOne }, payload.sub)
+      this.userClient.send({ cmd: USER_PATTERNS.FindOne }, { id: payload.sub })
     );
 
     if (!user) throw new UnauthorizedException();

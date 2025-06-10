@@ -36,14 +36,14 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         }),
       },
       {
-        name: 'USER_MICROSERVICE',
+        name: 'USERS_MICROSERVICE',
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: (config: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: config.get('USER_MICROSERVICE_HOST'),
-            port: config.get<number>('USER_MICROSERVICE_PORT'),
+            host: config.get('USERS_MICROSERVICE_HOST'),
+            port: config.get<number>('USERS_MICROSERVICE_PORT'),
           },
         }),
       },

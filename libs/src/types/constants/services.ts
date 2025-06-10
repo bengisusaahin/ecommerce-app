@@ -25,7 +25,7 @@ export const MICROSERVICES = {
         port: 3060
     },    
     USER: {
-        name: "USER_MICROSERVICE",
+        name: "USERS_MICROSERVICE",
         host: "users-microservice",
         port: 3020
     },
