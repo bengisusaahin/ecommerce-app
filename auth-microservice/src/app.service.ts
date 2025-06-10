@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { JwtPayload, LoginDto, UserDto, UserResponseDto } from '@ecommerce/types';
+import * as bcrypt from 'bcrypt';
+import { JwtPayload, LoginDto, USER_PATTERNS, UserDto, UserResponseDto } from '@ecommerce/types';
 import { firstValueFrom } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 
@@ -13,32 +14,31 @@ export class AppService {
   ) { }
 
   async validateUser(email: string, password: string) {
-    const plainUser: UserDto = await firstValueFrom(
-      this.usersMicroservice.send(
-        {
-          cmd: 'Users.FindByEmail',
-        },
-        { email },
-      ),
-    );
+    const user = await firstValueFrom(this.usersMicroservice.send({ cmd: USER_PATTERNS.FindByEmail }, { email }));
 
-    const user = plainToInstance(UserDto, plainUser, { excludeExtraneousValues: true });
-
-    if (!user || user.password !== password) {
-      throw new RpcException({
-        status: 'error',
-        message: 'Invalid credentials'
-      });
+    if (!user) {
+      return null;
     }
-    return user;
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return null;
+    }
+
+    const { password: _, ...safeUser } = user;
+
+    return new UserResponseDto(safeUser);
   }
+
 
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.email, loginDto.password);
+
     if (!user) {
       throw new RpcException({
         status: 'error',
-        message: 'User not found'
+        message: 'Invalid email or password',
       });
     }
 

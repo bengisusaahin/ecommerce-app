@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { UserRole } from '../../enums/user-role.enum';
 
 export class UserResponseDto {
@@ -23,6 +23,6 @@ export class UserResponseDto {
 }
 
 export class UserDto extends UserResponseDto {
-  @Expose()
+  @Exclude()
   password: string;
 }

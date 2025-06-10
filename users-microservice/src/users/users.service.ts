@@ -6,6 +6,7 @@ import { UserDto, UserResponseDto } from '@ecommerce/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { RpcException } from '@nestjs/microservices';
 import { plainToInstance } from 'class-transformer';
 
@@ -18,8 +19,14 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const user = this.userRepository.create(createUserDto);
-    const savedUser = await this.userRepository.save(user);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const newUser = new User({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+
+    const savedUser = await this.userRepository.save(newUser);
+
     return plainToInstance(UserResponseDto, savedUser, {
       excludeExtraneousValues: true,
     });
@@ -58,9 +65,14 @@ export class UsersService {
         message: `User with ID ${id} not found`
       });
     }
-    return plainToInstance(UserResponseDto, user, {
-      excludeExtraneousValues: true,
+    const userResponse = new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthdate: user.birthdate,
+      role: user.role,
     });
+    return userResponse;
   }
 
   async findByEmail(email: string): Promise<UserDto> {
@@ -71,9 +83,7 @@ export class UsersService {
         message: `User with email ${email} not found`
       });
     }
-    return plainToInstance(UserDto, user, {
-      excludeExtraneousValues: true,
-    });
+    return user
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
