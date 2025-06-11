@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Shipping, ShippingSchema } from './schema/shipping.schema';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { KAFKA_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES } from '@ecommerce/types';
 
 @Module({
   imports: [
@@ -23,19 +23,24 @@ import { KAFKA_PATTERNS } from '@ecommerce/types';
     }),
     MongooseModule.forFeature([{ name: Shipping.name, schema: ShippingSchema }]),
 
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
-        name: KAFKA_PATTERNS.name,
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'shipping',
-            brokers: [`${KAFKA_PATTERNS.host}:${KAFKA_PATTERNS.port}`],
+        name: MICROSERVICES.KAFKA.name,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: config.get('SHIPPING_KAFKA_CLIENT_ID'),
+              brokers: [`${MICROSERVICES.KAFKA.host}:${MICROSERVICES.KAFKA.port}`],
+            },
+            consumer: {
+              groupId: config.get<string>('SHIPPING_KAFKA_CONSUMER_GROUP_ID') || 'shipping-consumer',
+
+            },
           },
-          consumer: {
-            groupId: 'shipping-consumer',
-          },
-        },
+        }),
       },
     ]),
   ],

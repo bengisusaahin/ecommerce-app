@@ -6,19 +6,19 @@ import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OrderKafkaProducerService } from './order-kafka-producer.service';
-import { KAFKA_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES } from '@ecommerce/types';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
     ClientsModule.register([
       {
-        name: KAFKA_PATTERNS.name,
+        name: MICROSERVICES.KAFKA.name,
         transport: Transport.KAFKA,
         options: {
           client: {
             clientId: 'orders',
-            brokers: [`${KAFKA_PATTERNS.host}:${KAFKA_PATTERNS.port}`],
+            brokers: [`${MICROSERVICES.KAFKA.host}:${MICROSERVICES.KAFKA.port}`],
           },
         },
       },

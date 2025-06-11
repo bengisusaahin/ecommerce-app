@@ -4,7 +4,7 @@ import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { plainToInstance } from 'class-transformer';
-import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, OrderCreatedEvent, PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
+import { MICROSERVICES, ORDER_KAFKA_EVENTS, OrderCreatedEvent, PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateOrderDto, OrderResponseDto, UpdateOrderDto } from '@ecommerce/types';
 
@@ -18,7 +18,7 @@ export class OrdersService implements OnModuleInit {
     @InjectRepository(OrderItem)
     private readonly orderItemRepository: Repository<OrderItem>,
 
-    @Inject(`${KAFKA_PATTERNS.name}`) private readonly kafkaClient: ClientKafka,
+    @Inject(`${MICROSERVICES.KAFKA.name}`) private readonly kafkaClient: ClientKafka,
   ) { }
 
   onModuleInit() {

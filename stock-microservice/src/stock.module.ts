@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { StockController } from './stock.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { KAFKA_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES } from '@ecommerce/types';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
@@ -14,7 +14,7 @@ import { join } from 'path';
     }),
     ClientsModule.registerAsync([
       {
-        name: 'PRODUCTS_MICROSERVICE',
+        name: MICROSERVICES.PRODUCT.name,
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: (config: ConfigService) => ({
@@ -26,13 +26,15 @@ import { join } from 'path';
         }),
       },
       {
-        name: KAFKA_PATTERNS.name,
-        useFactory: () => ({
+        name: MICROSERVICES.KAFKA.name,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: 'stock',
-              brokers: [`${KAFKA_PATTERNS.host}:${KAFKA_PATTERNS.port}`],
+              clientId: config.get('STOCK_KAFKA_CLIENT_ID'),
+              brokers: [`${MICROSERVICES.KAFKA.host}:${MICROSERVICES.KAFKA.port}`],
             },
           },
         }),

@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { ClientKafka, ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { KAFKA_PATTERNS, PRODUCT_PATTERNS, STOCK_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES, PRODUCT_PATTERNS, STOCK_PATTERNS } from '@ecommerce/types';
 
 interface OrderItem {
   productId: number;
@@ -13,9 +13,9 @@ export class StockService {
   private readonly logger = new Logger(StockService.name);
 
   constructor(
-    @Inject('PRODUCTS_MICROSERVICE')
+    @Inject(MICROSERVICES.PRODUCT.name)
     private readonly productsClient: ClientProxy,
-    @Inject(KAFKA_PATTERNS.name)
+    @Inject(MICROSERVICES.KAFKA.name)
     private readonly kafkaClient: ClientKafka,
   ) { }
 

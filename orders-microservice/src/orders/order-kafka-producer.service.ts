@@ -1,11 +1,11 @@
-import { KAFKA_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES } from '@ecommerce/types';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Kafka } from 'kafkajs';
 
 @Injectable()
 export class OrderKafkaProducerService implements OnModuleInit {
     private kafka = new Kafka({
-        brokers: [`${KAFKA_PATTERNS.host}:${KAFKA_PATTERNS.port}`]
+        brokers: [`${MICROSERVICES.KAFKA.host}:${MICROSERVICES.KAFKA.port}`]
     });
     private producer = this.kafka.producer();
     async onModuleInit() {

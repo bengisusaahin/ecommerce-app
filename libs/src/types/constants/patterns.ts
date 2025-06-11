@@ -49,12 +49,6 @@ export const USER_PATTERNS = {
   Remove: 'Users.Remove',
 };
 
-export const KAFKA_PATTERNS = {
-  name: 'KAFKA_PRODUCER',
-  host: 'kafka',
-  port: 9092,
-}
-
 export const ORDER_KAFKA_EVENTS = {
   ORDER_CREATED: 'Order.Created',
 }

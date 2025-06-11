@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Shipping, ShippingDocument, ShippingStatus } from './schema/shipping.schema';
 import { ClientKafka } from '@nestjs/microservices';
-import { KAFKA_PATTERNS, OrderCreatedEvent, SHIPPING_PATTERNS } from '@ecommerce/types';
+import { MICROSERVICES, OrderCreatedEvent, SHIPPING_PATTERNS } from '@ecommerce/types';
 
 @Injectable()
 export class ShippingService implements OnModuleInit {
   constructor(
     @InjectModel(Shipping.name)
     private shippingModel: Model<ShippingDocument>,
-    @Inject(KAFKA_PATTERNS.name)
+    @Inject(MICROSERVICES.KAFKA.name)
     private readonly kafkaClient: ClientKafka,
   ) { }
 
