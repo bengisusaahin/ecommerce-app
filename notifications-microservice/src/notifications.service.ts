@@ -1,13 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MailService } from './mail/mail.service';
-import { OrderCreatedEvent } from '@ecommerce/types';
+import { MICROSERVICES, OrderCreatedEvent, USER_PATTERNS } from '@ecommerce/types';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly mailService: MailService) {}
+  constructor(
+    @Inject(MICROSERVICES.USER.name)
+    private readonly userClient: ClientProxy,
+    private readonly mailService: MailService) {}
 
-  orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent) {
+  async orderCreatedEventHandler(orderCreatedEvent: OrderCreatedEvent) {
     console.log('Order Created Event:', orderCreatedEvent);
-    this.mailService.sendOrderMail(orderCreatedEvent);
+    const user = await firstValueFrom(
+      this.userClient.send(
+        { cmd: USER_PATTERNS.FindOne },
+        { userId: orderCreatedEvent.userId }
+      )
+    )
+
+    await this.mailService.sendOrderMail(orderCreatedEvent, user.email);
   }
 }

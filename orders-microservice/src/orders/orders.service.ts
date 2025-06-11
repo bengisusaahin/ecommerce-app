@@ -4,7 +4,7 @@ import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { plainToInstance } from 'class-transformer';
-import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
+import { KAFKA_PATTERNS, ORDER_KAFKA_EVENTS, OrderCreatedEvent, PaginatedResult, PaginationParams, SortOrder } from '@ecommerce/types';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateOrderDto, OrderResponseDto, UpdateOrderDto } from '@ecommerce/types';
 
@@ -44,7 +44,7 @@ export class OrdersService implements OnModuleInit {
 
     const savedItems = await this.orderItemRepository.save(orderItems);
 
-    const orderPayload = {
+    const orderPayload: OrderCreatedEvent = {
       orderId: order.id,
       userId: order.userId,
       createdAt: new Date().toISOString(),

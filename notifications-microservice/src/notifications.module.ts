@@ -4,6 +4,8 @@ import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
 import { MailService } from './mail/mail.service';
 import { join } from 'path';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { MICROSERVICES } from '@ecommerce/types';
 
 @Module({
   imports: [
@@ -11,6 +13,14 @@ import { join } from 'path';
       isGlobal: true,
       envFilePath: join(__dirname, '..', '..', '.env'),
     }),
+    ClientsModule.register([{
+      name: MICROSERVICES.USER.name,
+      transport: Transport.TCP,
+      options: {
+        host: MICROSERVICES.USER.host,
+        port: MICROSERVICES.USER.port
+      }
+    }]),
   ],
   controllers: [NotificationsController],
   providers: [NotificationsService, MailService],
