@@ -71,7 +71,9 @@ import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
 ## 🐳 Docker Containers Overview
 
 The system runs all services and dependencies in isolated containers using Docker Compose:
+
 ![](./assets/screenshots/rcontainers.png)
+
 ![](./assets/screenshots/rcontainers2.png)
 
 ### 🗄️ Databases & Infrastructure
