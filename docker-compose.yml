@@ -106,6 +106,12 @@ services:
             - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
         networks:
             - commerce-network
+        healthcheck:
+            test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list || exit 1"]
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
 
     auth-microservice:
         build: 
@@ -151,7 +157,8 @@ services:
             dockerfile: ./notifications-microservice/Dockerfile
         container_name: notifications_microservice_container
         depends_on:
-            - kafka
+            kafka:
+                condition: service_healthy
         env_file:
             - .env
         volumes:
@@ -207,8 +214,10 @@ services:
             dockerfile: ./shipping-microservice/Dockerfile
         container_name: shipping_microservice_container
         depends_on:
-            - kafka
-            - shipping-mongo-db
+            kafka:
+                condition: service_healthy
+            shipping-mongo-db:
+                condition: service_started
         env_file:
             - .env
         volumes:
@@ -229,8 +238,10 @@ services:
             dockerfile: ./stock-microservice/Dockerfile
         container_name: stock_microservice_container
         depends_on:
-            - kafka
-            - products-pg-db
+            kafka:
+                condition: service_healthy
+            products-pg-db:
+                condition: service_started
         env_file:
             - .env
         volumes:

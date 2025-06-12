@@ -36,6 +36,9 @@ import { join } from 'path';
               clientId: config.get('STOCK_KAFKA_CLIENT_ID'),
               brokers: [`${MICROSERVICES.KAFKA.host}:${MICROSERVICES.KAFKA.port}`],
             },
+            consumer: {
+              groupId: config.get<string>('STOCK_KAFKA_CONSUMER_GROUP_ID') || 'stock-consumer',
+            },
           },
         }),
       },
