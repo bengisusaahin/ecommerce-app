@@ -68,6 +68,12 @@ import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
 
 ## 📸 Screenshots
 
+## 🐳 Docker Containers Overview
+
+The system runs all services and dependencies in isolated containers using Docker Compose:
+![](./assets/screenshots/rcontainers.png)
+![](./assets/screenshots/rcontainers2.png)
+
 ### 🗄️ Databases & Infrastructure
 
 - PostgreSQL – Orders Microservice  
@@ -107,7 +113,7 @@ import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
 > Full visual overview available in: [Screenshots.pdf](./assets/screenshots/Screenshots.pdf)
 
 ## 📘 Swagger UI
-![Swagger UI](./docs/swagger-ui.png)
+![Swagger UI](./assets/screenshots/swagger-ui.png)
 
 ##  Commit Strategy
 
