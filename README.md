@@ -72,9 +72,9 @@ import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
 
 The system runs all services and dependencies in isolated containers using Docker Compose:
 
-![](./assets/screenshots/rcontainers.png)
+![](./assets/screenshots/containers.png)
 
-![](./assets/screenshots/rcontainers2.png)
+![](./assets/screenshots/containers2.png)
 
 ### 🗄️ Databases & Infrastructure
 
