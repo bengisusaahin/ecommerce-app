@@ -1,6 +1,6 @@
 # Ecommerce-app
 
-This project is part of the **NewMindAi Sprints**. It was built using **NestJS**, follows **modular, clean code principles**, and adopts a **microservice architecture** with **Kafka**, **PostgreSQL**, **MongoDB**, **Redis**, and **Docker**. The application is fully containerized and includes services such as **Users**, **Products**, **Orders**, **Cart**, **Shipping**, **Stock**, **Notifications**, **Authentication**, and **API Gateway**.
+This project is final case of the **NewMindAi Bootcamp**. It was built using **NestJS**, follows **modular, clean code principles**, and adopts a **microservice architecture** with **Kafka**, **PostgreSQL**, **MongoDB**, **Redis**, and **Docker**. The application is fully containerized and includes services such as **Users**, **Products**, **Orders**, **Cart**, **Shipping**, **Stock**, **Notifications**, **Authentication**, and **API Gateway**.
 
 ## 🚀 Features
 
@@ -14,7 +14,7 @@ This project is part of the **NewMindAi Sprints**. It was built using **NestJS**
 - **Pipes** for data validation and transformation
 - **Global Exception Filter** for standardizing error responses
 - **Interceptors** for consistent success response structure
-- **Swagger Documentation** for each service
+- **Swagger Documentation** 
 - Implements **Atomic Commits** with **Semantic Commit Messages**
 
 ## 🔧 Installation
@@ -105,6 +105,9 @@ import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
   ![](./assets/screenshots/users-microservice.png)
 
 > Full visual overview available in: [Screenshots.pdf](./assets/screenshots/Screenshots.pdf)
+
+## 📘 Swagger UI
+![Swagger UI](./docs/swagger-ui.png)
 
 ##  Commit Strategy
 
