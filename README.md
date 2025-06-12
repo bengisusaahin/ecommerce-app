@@ -1,49 +1,110 @@
 # Ecommerce-app
 
-This project is part of the **NewMindAi Sprints**. It was built using **NestJS** and follows **modular, clean code principles** with **semantic commits**. It implements CRUD functionality for **Users** and **Products**, utilizes **validations**, **guards**, and **response interceptors** for a robust backend API.
+This project is part of the **NewMindAi Sprints**. It was built using **NestJS**, follows **modular, clean code principles**, and adopts a **microservice architecture** with **Kafka**, **PostgreSQL**, **MongoDB**, **Redis**, and **Docker**. The application is fully containerized and includes services such as **Users**, **Products**, **Orders**, **Cart**, **Shipping**, **Stock**, **Notifications**, **Authentication**, and **API Gateway**.
 
 ## 🚀 Features
 
 - Built with **NestJS** and **TypeScript**
-- CRUD operations for **Users** and **Products**
+- Microservices Architecture with **Kafka** as message broker
+- CRUD operations for **Users**, **Products**, **Orders**, **Cart**
+- **MongoDB** for Cart and Shipping services, **PostgreSQL** for others
+- **Redis Cache** integration for performance optimization
 - **DTO validation** with `class-validator`
 - **Guards** for Admin and Super Admin role access
 - **Pipes** for data validation and transformation
 - **Global Exception Filter** for standardizing error responses
 - **Interceptors** for consistent success response structure
+- **Swagger Documentation** for each service
 - Implements **Atomic Commits** with **Semantic Commit Messages**
 
 ## 🔧 Installation
 
 ```bash
+# Install dependencies
 npm install
-npm run start:dev
+
+# Run full system with Docker
+docker-compose up --build
 ```
 
-> Make sure you have nodemon installed globally or as a dev dependency.
+> Make sure you have Docker, Docker Compose and Node.js installed.
 
-## 🔗 Available Endpoints
-- `/users` → List of users
+## 🔗 Sample Endpoints
+- **Users Service:** `/users` → List of users
 
-- `/products` → List of products
+- **Products Service:** `/products` → List of products
 
-- `/products/:id` → Get a specific product by ID
+- **Products Service:** `/products/:id` → Get a specific product by ID
 
-- `/users/:id` → Get a specific user by ID
+- **Users Service:** `/users/:id` → Get a specific user by ID
 
-- `/users` → Create a new user
+- **Users Service:** `/users` → Create a new user
 
-- `/products` → Add a new product
+- **Products Service:** `/products` → Add a new product
 
-- `/users/:id` →Update user details (including role update, Super Admin only)
+- **Users Service:** `/users/:id` → Update user details (including role update, Super Admin only)
 
-## ✅ Sprint Summary
-- [x] CRUD Implementation for Users and Products
-- [x] DTO Validation with class-validator
-- [x] Guards for Admin and Super Admin access control
-- [x] Interceptors for consistent API responses
-- [x] Exception Filter to handle error responses
-- [x] Pagination and Sorting for GET requests
+## 📆 Shared Library
+
+This project uses a **Shared Library (`libs`)** to centralize and reuse common logic, types, and patterns across all microservices. This promotes **DRY principles**, consistency, and maintainability.
+
+### 📂 What’s included?
+- `DTO` classes shared across services (e.g., `CreateUserDto`, `CreateProductDto`)
+- `Types` and interfaces (e.g., `PaginationParams`, `SortOrder`)
+- Kafka `Event Patterns` used in inter-service communication
+- Shared enums and utility types
+
+### 🔗 Example Usage
+```ts
+// In any microservice
+import { CreateUserDto, USER_PATTERNS } from '@ecommerce/types';
+```
+
+### 🔧 Benefits
+- Centralized schema validation
+- Improved type safety and reusability
+- Clean versioning and atomic updates
+- Decouples logic across microservices
+
+## 📸 Screenshots
+
+### 🗄️ Databases & Infrastructure
+
+- PostgreSQL – Orders Microservice  
+  ![](./assets/screenshots/orders-pg-db.png)
+- Redis Cache  
+  ![](./assets/screenshots/redis.png)
+- MongoDB – Cart and Shipping  
+  ![](./assets/screenshots/cart-mongo-db.png)  
+  ![](./assets/screenshots/shipping-mongo-db.png)
+- pgAdmin Interface  
+  ![](./assets/screenshots/pgadmin.png)
+- Zookeeper & Kafka Services  
+  ![](./assets/screenshots/zookeeper.png)  
+  ![](./assets/screenshots/kafka.png)
+
+### 🧩 Microservices
+
+- API Gateway  
+  ![](./assets/screenshots/api-gateway.png)
+- Auth Service  
+  ![](./assets/screenshots/auth-microservice.png)
+- Cart Service  
+  ![](./assets/screenshots/cart-microservice.png)
+- Notifications Service  
+  ![](./assets/screenshots/notifications-microservice.png)
+- Orders Service  
+  ![](./assets/screenshots/orders-microservice.png)
+- Products Service  
+  ![](./assets/screenshots/products-microservice.png)
+- Shipping Service  
+  ![](./assets/screenshots/shipping-microservice.png)
+- Stock Service  
+  ![](./assets/screenshots/stock-microservice.png)
+- Users Service  
+  ![](./assets/screenshots/users-microservice.png)
+
+> Full visual overview available in: [Screenshots.pdf](./assets/screenshots/Screenshots.pdf)
 
 ##  Commit Strategy
 
